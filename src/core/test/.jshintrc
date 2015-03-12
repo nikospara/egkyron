@@ -3,6 +3,7 @@
 	"unused": true,
 	"eqnull": true,
 	"globals": {
+		"console": true,
 		"require": true,
 		"jasmine": true,
 		"it": true,

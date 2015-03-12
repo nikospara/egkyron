@@ -115,7 +115,7 @@ ValidationContext.prototype.addResult = function(validityFlag) {
 ValidationContext.prototype.pushPath = function(path) {
 	var curPath = this.path[this.path.length-1], newPath = { _validity: null, _children: null };
 	if( !curPath._children ) {
-		curPath._children = typeof(path) === 'number' ? [] : {};
+		curPath._children = (typeof(path) === 'number' ? [] : {});
 	}
 	curPath._children[path] = newPath;
 	this.path.push(newPath);

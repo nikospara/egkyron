@@ -44,18 +44,20 @@ Validator.prototype.validate = function(model, eager, groups) {
  * Recursively validate the properties of the <code>model</code> object, optionally running only the specified groups
  * and limiting validation to the given properties.
  *
+ * @protected
  * @param {ValidationContext} vctx - The validation context.
  * @param {any} model - The object whose properties will be validated.
  * @param {string} type - The type key of the value being validated.
  * @param {boolean} [eager] - If <code>true</code>, validation will stop at the first invalid field.
  * @param {string[]} [groups] - The groups to validate.
  * @param {string[]} [props] - The properties of <code>model</code> to validate.
+ * @returns {boolean} - If validation should go on.
  */
 Validator.prototype.validateProperties = function(vctx, model, type, eager, groups, props) {
-	// jshint unused:false
-	var i, constraints, propNames, propName, propValue, self = this;
+	var self = this;
 	props = sanitizeProps(props);
-	propNames = this.introspectionStrategy.enumerateProps(model, type, vctx, function(propName) {
+	return this.introspectionStrategy.enumerateProps(model, type, vctx, function(propName) {
+		var ret, constraints, propValue;
 		if( props == null || props.indexOf(propName) >= 0 ) {
 			constraints = self.introspectionStrategy.extractConstraintsFromContext(vctx, model, type, propName);
 			propValue = self.introspectionStrategy.evaluate(model, propName, type, vctx);
@@ -63,26 +65,18 @@ Validator.prototype.validateProperties = function(vctx, model, type, eager, grou
 			self.evaluateConstraints(vctx, constraints, model, propValue, eager, groups);
 			if( (!eager || !vctx.hasValidationErrors()) && (propValue != null && typeof(propValue) === 'object') ) {
 				if( !(propValue instanceof Date) ) { // add other trivial cases where we do not want to step into object
-					self.validateProperties(vctx, propValue, self.introspectionStrategy.findType(vctx, type, propName), eager, groups);
+					ret = self.validateProperties(vctx, propValue, self.introspectionStrategy.findType(vctx, type, propName), eager, groups);
+					if( ret === false ) {
+						return false;
+					}
 				}
+			}
+			vctx.popPath();
+			if( eager && vctx.hasValidationErrors() ) {
+				return false;
 			}
 		}
 	});
-//	for( i=0; i < propNames.length; i++ ) {
-//		propName = propNames[i];
-//		if( props == null || props.indexOf(propName) >= 0 ) {
-//			constraints = this.introspectionStrategy.extractConstraintsFromContext(vctx, model, type, propName);
-//			propValue = this.introspectionStrategy.evaluate(model, propName, type, vctx);
-//			vctx.pushPath(propName);
-//			this.evaluateConstraints(vctx, constraints, model, propValue, eager, groups);
-//			if( (!eager || !vctx.hasValidationErrors()) && (propValue != null && typeof(propValue) === 'object') ) {
-//				if( !(propValue instanceof Date) ) { // add other trivial cases where we do not want to step into object
-//					this.validateProperties(vctx, propValue, this.introspectionStrategy.findType(vctx, type, propName), eager, groups);
-//				}
-//			}
-//			vctx.popPath(propName);
-//		}
-//	}
 };
 
 /**
@@ -97,7 +91,7 @@ Validator.prototype.validateProperties = function(vctx, model, type, eager, grou
  */
 function sanitizeProps(props) {
 	if( props == null ) {
-		return props;
+		return null;
 	}
 	var i, ret = [];
 	for( i=0; i < props.length; i++ ) {
@@ -105,35 +99,6 @@ function sanitizeProps(props) {
 	}
 	return ret.length > 0 ? ret : null;
 }
-
-///**
-// * Check a specific property, <code>x</code>, whether it is a member of an object
-// * (<code>x</code> is string) or the member of an array (<code>x</code> is number).
-// *
-// * @memberof Validator
-// * @private
-// * @param {string[]} props - The original <code>props</code>.
-// * @returns {string[]} - The sanitized <code>props</code>.
-// */
-//function loopModel(x, model, type, vctx, eager, groups, props) {
-//	var validators;
-//	if( props != null && props.indexOf(x) < 0 ) return;
-//	validators = validation.introspector.extractConstraintsFromContext(vctx, type, model, x);
-//	vctx.pushPath(x);
-//	if( angular.isArray(validators) ) {
-//		executeValidations(vctx, validators, model, model[x], eager, groups);
-//		if( eager && vctx.hasValidationErrors() ) {
-//			vctx.popPath(x);
-//			return false;
-//		}
-//	}
-//	if( model[x] != null && typeof(model[x]) === "object" ) {
-//		if( !(model[x] instanceof Date) ) { // add other trivial cases where we do not want to step into object
-//			validateProperties(model[x], validation.introspector.findType(vctx, type, x), vctx, eager, groups);
-//		}
-//	}
-//	vctx.popPath(x);
-//}
 
 /**
  * Validate a value given the constraints, optionally running only the specified groups.
@@ -148,19 +113,21 @@ function sanitizeProps(props) {
  */
 Validator.prototype.evaluateConstraints = function(vctx, constraints, ctxObject, value, eager, groups) {
 	var i, res, constraint;
-	if( groups == null ) groups = Validator.DEFAULT_GROUPS;
-	constraints = this.normalizeConstraints(constraints);
-	for (i = 0; i < constraints.length; i++) {
-		constraint = constraints[i];
-		if( inGroups(constraint, groups) ) {
-			vctx.setCurrentConstraintName(constraint.key);
-			res = constraint.validator.call(ctxObject, value, constraint.params, vctx);
-			if( typeof(res) === "boolean" ) {
-				vctx.addResult(res);
-			}
-			vctx.setCurrentConstraintName(null);
-			if( eager && res === false ) {
-				break;
+	if( constraints ) {
+		if( groups == null ) groups = Validator.DEFAULT_GROUPS;
+		constraints = this.normalizeConstraints(constraints);
+		for (i = 0; i < constraints.length; i++) {
+			constraint = constraints[i];
+			if( inGroups(constraint, groups) ) {
+				vctx.setCurrentConstraintName(constraint.key);
+				res = constraint.validator.call(ctxObject, value, constraint.params, vctx);
+				if( typeof(res) === "boolean" ) {
+					vctx.addResult(res);
+				}
+				vctx.setCurrentConstraintName(null);
+				if( eager && res === false ) {
+					break;
+				}
 			}
 		}
 	}

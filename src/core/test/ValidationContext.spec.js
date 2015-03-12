@@ -12,6 +12,12 @@ describe('The ValidationContext', function() {
 		vctx.pushPath('number');
 		vctx.popPath();
 		vctx.popPath();
+		vctx.pushPath('pets');
+		vctx.pushPath(0);
+		vctx.pushPath('name');
+		vctx.popPath();
+		vctx.popPath();
+		vctx.popPath();
 		expect(vctx.result).toEqual({
 			_validity: null,
 			_children: {
@@ -31,6 +37,20 @@ describe('The ValidationContext', function() {
 							_children: null
 						}
 					}
+				},
+				pets: {
+					_validity: null,
+					_children: [
+						{
+							_validity: null,
+							_children: {
+								name: {
+									_validity: null,
+									_children: null
+								}
+							}
+						}
+					]
 				}
 			}
 		});
