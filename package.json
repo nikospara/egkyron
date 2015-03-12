@@ -1,0 +1,15 @@
+{
+	"name": "validation",
+	"version": "0.1.0",
+	"dependencies": {
+
+	},
+	"devDependencies": {
+		"gulp": "*",
+		"gulp-jshint": "*",
+		"jshint-stylish": "*",
+		"gulp-jsdoc": "*",
+		"gulp-jasmine": "*",
+		"gulp-tap": "*"
+	}
+}
