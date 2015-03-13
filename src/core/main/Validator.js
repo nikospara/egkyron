@@ -29,6 +29,9 @@ Validator.DEFAULT_GROUPS = ['default'];
 
 /**
  * Validate a model, optionally running only the specified groups.
+ * <p>
+ * This is the main entry point for the model validation.
+ * </p>
  *
  * @param {any} model - The model to validate.
  * @param {boolean} [eager] - If <code>true</code>, validation will stop at the first invalid field.
@@ -36,10 +39,26 @@ Validator.DEFAULT_GROUPS = ['default'];
  * @returns {ValidationContext}
  */
 Validator.prototype.validate = function(model, eager, groups) {
-	// jshint unused:false
-
+	var props, vctx = new ValidationContext(), nparams = 3;
+	if( model != null ) {
+		if( typeof(groups) === "boolean" ) {
+			eager = groups;
+			groups = null;
+		}
+		if( !angular.isArray(groups) ) {
+			groups = Validator.DEFAULT_GROUPS;
+			nparams -= 1;
+		}
+		if( typeof(eager) !== "boolean" ) {
+			eager = false;
+			nparams -= 1;
+		}
+		props = arguments.length > nparams ? Array.prototype.slice.call(arguments, nparams) : null;
+		validateProperties(model, null, vctx, eager, groups, props);
+	}
+	return vctx;
 };
-	
+
 /**
  * Recursively validate the properties of the <code>model</code> object, optionally running only the specified groups
  * and limiting validation to the given properties.
@@ -103,6 +122,9 @@ function sanitizeProps(props) {
 /**
  * Validate a value given the constraints, optionally running only the specified groups.
  * Reports the validation result in the given validation context.
+ * <p>
+ * This is a secondary entry point to the validation process, used to validate a single field (e.g. from the UI).
+ * </p>
  *
  * @param {ValidationContext} vctx - The validation context.
  * @param {Constraint[]} constraints - The constraints; may be <code>Constraint</code> objects or expressed in a shorthand form, e.g. a single <code>string</code> would indicate that the <code>Constraint.validator</code> should be read from an external mapping.
@@ -316,8 +338,10 @@ function inGroups(constraint, requiredGroups) {
  */
 
 /**
- * A callback invoked with the nect property name from the <code>IntrospectionStrategy</code>.
+ * A callback invoked with the nect property name from the <code>IntrospectionStrategy</code>,
+ * may return <code>false</code> to stop the iteration recursively.
  *
  * @callback IntrospectionStrategy~enumeratePropsCallback
  * @param {string|number} propName - The name of the property or index in the current array.
+ * @returns {boolean|void} - If a literal <code>false</code> is returned, the validation will exit (used to implement the <code>eager</code> flag).
  */

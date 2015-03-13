@@ -1,2 +1,3 @@
-var Constraint = require('./Constraint');
+var Constraint = require('./Constraint'),
+	ValidationContext = require('./ValidationContext');
 

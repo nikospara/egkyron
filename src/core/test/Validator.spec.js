@@ -146,7 +146,7 @@ describe('The Validator', function() {
 	});
 
 	describe('validateProperties method', function() {
-		var vctx, introspectionStrategy, v, model = {}, TYPE = 'THE_TYPE', PROPNAME0 = 'PROPNAME0', PROPNAME1 = 'PROPNAME1';
+		var vctx, introspectionStrategy, v, model = {}, TYPE = 'THE_TYPE', PROPNAME0 = 'PROPNAME0', PROPNAME1 = 'PROPNAME1', value = 'THE VALUE', hasValidationErrors = false, innerModel;
 
 		beforeEach(function() {
 			vctx = jasmine.createSpyObj('vctx', ['pushPath', 'popPath', 'hasValidationErrors']);
@@ -207,28 +207,9 @@ describe('The Validator', function() {
 				expect(introspectionStrategy.evaluate.calls.count()).toBe(1);
 				expect(introspectionStrategy.evaluate.calls.mostRecent().args).toEqual([model, PROPNAME0, TYPE, vctx]);
 			});
-// XXX This is wrong, the fake enumerateProps is not used
-//			it('recurses for the properties of the model', function() {
-//				model[PROPNAME0] = { the_value: value };
-//				introspectionStrategy.enumerateProps.and.callFake(function(o, t, vc, cb) {
-//					for( var x in o ) {
-//						if( !o.hasOwnProperty(x) ) continue;
-//						cb(x);
-//					}
-//				});
-//				introspectionStrategy.evaluate.and.callFake(function(o, propName) {
-//					return o[propName];
-//				});
-//				callback(PROPNAME0);
-//				expect(introspectionStrategy.evaluate.calls.count()).toBe(2);
-//				expect(introspectionStrategy.evaluate.calls.argsFor(0)).toEqual([model, PROPNAME0, TYPE, vctx]);
-//				expect(introspectionStrategy.evaluate.calls.argsFor(1)).toEqual([model[PROPNAME0], 'the_value', undefined, vctx]);
-//			});
 		});
 
-		it('exits eagerly, if eager is true', function() {
-			var value = 'THE VALUE', hasValidationErrors = false, innerModel;
-
+		function createComplexFixture() {
 			vctx = jasmine.createSpyObj('vctx', ['pushPath', 'popPath', 'hasValidationErrors']);
 			introspectionStrategy = jasmine.createSpyObj('introspectionStrategy', ['extractConstraintsFromContext', 'enumerateProps', 'evaluate', 'findType']);
 			v = new Validator(registry, introspectionStrategy);
@@ -277,12 +258,41 @@ describe('The Validator', function() {
 			introspectionStrategy.evaluate.and.callFake(function(o, propName) {
 				return o[propName];
 			});
+		}
 
+		it('recurses for the properties of the model', function() {
+			createComplexFixture();
+			v.validateProperties(vctx, model, TYPE, false);
+			expect(introspectionStrategy.evaluate.calls.count()).toBe(5);
+			expect(introspectionStrategy.evaluate.calls.argsFor(0)).toEqual([model, PROPNAME0, TYPE, vctx]);
+			expect(introspectionStrategy.evaluate.calls.argsFor(1)).toEqual([innerModel, PROPNAME0, undefined, vctx]);
+			expect(introspectionStrategy.evaluate.calls.argsFor(2)).toEqual([innerModel, PROPNAME1, undefined, vctx]);
+			expect(introspectionStrategy.evaluate.calls.argsFor(3)).toEqual([model, PROPNAME1, TYPE, vctx]);
+			expect(introspectionStrategy.evaluate.calls.argsFor(4)).toEqual([model[PROPNAME1], 'the_value', undefined, vctx]);
+		});
+
+		it('exits eagerly, if eager is true', function() {
+			createComplexFixture();
 			v.validateProperties(vctx, model, TYPE, true);
-
 			expect(introspectionStrategy.evaluate.calls.count()).toBe(2);
 			expect(introspectionStrategy.evaluate.calls.argsFor(0)).toEqual([model, PROPNAME0, TYPE, vctx]);
 			expect(introspectionStrategy.evaluate.calls.argsFor(1)).toEqual([innerModel, PROPNAME0, undefined, vctx]);
+		});
+	});
+
+	describe('validate method', function() {
+		var v, vctx;
+
+		beforeEach(function() {
+			v = new Validator();
+			spyOn(v, 'validateProperties');
+		});
+
+		it('accepts a null/undefined model and returns valid without calling the inner methods', function() {
+			vctx = v.validate();
+			expect(vctx.result._thisValid).toBe(true);
+			expect(vctx.result._childrenValid).toBeUndefined();
+			expect(v.validateProperties).not.toHaveBeenCalled();
 		});
 	});
 });

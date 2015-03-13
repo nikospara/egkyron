@@ -35,49 +35,72 @@ function ValidationContext() {
 	 * 
 	 * // the result would look like:
 	 * result = {
-	 * 	name: {
-	 * 		_validity: {
-	 * 			length: {...},    // a specific validator, e.g. for the string length
-	 * 			nospaces: {...}   // another spacific validator, e.g. "contains no spaces"
-	 * 		},
-	 * 		_children: null
+	 * 	_thisValid: true,
+	 * 	_childrenValid: false,
+	 * 	_validity: {
+	 * 		...
 	 * 	},
-	 * 	address: {
-	 * 		_validity: {
-	 * 			...
-	 * 		},
-	 * 		_children: { // NOTE: children is object
-	 * 			street: {
-	 * 				_validity: {
-	 * 					...
-	 * 				},
-	 * 				_children: null
+	 * 	_children: {
+	 * 		name: {
+	 * 			_thisValid: true,
+	 * 			// NOTE: no _childrenValid member
+	 * 			_validity: {
+	 * 				length: {...},    // a specific validator, e.g. for the string length
+	 * 				nospaces: {...}   // another spacific validator, e.g. "contains no spaces"
 	 * 			},
-	 * 			number: {
-	 * 				_validity: {
-	 * 					...
-	 * 				},
-	 * 				_children: null
-	 * 			}
-	 * 		}
-	 * 	},
-	 * 	pets: {
-	 * 		_validity: {
-	 * 			...
+	 * 			_children: null
 	 * 		},
-	 * 		_children: [ // NOTE: children is array
-	 * 			{ // index/key is 0 implicitly
-	 * 				name: {
-	 * 					...
+	 * 		address: {
+	 * 			_thisValid: true,
+	 * 			_childrenValid: false,
+	 * 			_validity: {
+	 * 				...
+	 * 			},
+	 * 			_children: { // NOTE: children is object
+	 * 				street: {
+	 * 					_thisValid: true,
+	 * 					_validity: {
+	 * 						...
+	 * 					},
+	 * 					_children: null
+	 * 				},
+	 * 				number: {
+	 * 					_thisValid: true,
+	 * 					_validity: {
+	 * 						...
+	 * 					},
+	 * 					_children: null
 	 * 				}
 	 * 			}
-	 * 		]
+	 * 		},
+	 * 		pets: {
+	 * 			_validity: {
+	 * 				...
+	 * 			},
+	 * 			_children: [ // NOTE: children is array
+	 * 				{ // index/key is 0 implicitly
+	 * 					name: {
+	 * 						...
+	 * 					}
+	 * 				}
+	 * 			]
+	 * 		}
 	 * 	}
 	 * };
 	 *
 	 * @member {Object}
 	 */
-	this.result = { _validity: null, _children: null };
+	this.result = { _thisValid: true, _validity: null, _children: null };
+	/**
+	 * The message related to the current result, usually a string but may be anything that makes sense to the underlying message display mechanism.
+	 * @member {string|any}
+	 */
+	this.message = null;
+	/**
+	 * Message parameters related to the current result.
+	 * @member {object}
+	 */
+	this.messageParams = null;
 	/**
 	 * Keep the path to the current property, so as to be able to return to the parent when <code>popPath()</code> is called.
 	 * @member {Object[]}
@@ -86,25 +109,53 @@ function ValidationContext() {
 }
 
 /**
- * Set the name of the constraint being validated.
- * <p>
- * <em>IMPLEMENTATION NOTE:</em> This did not need to be a function, but it is easier to mock this way.
- * </p>
+ * Set the name of the constraint being validated and reset the <code>message</code> and <code>messageParams</code>.
  *
  * @param {string} constraintName - The name of the constraint being validated.
  */
 ValidationContext.prototype.setCurrentConstraintName = function(constraintName) {
 	this.constraintName = constraintName;
+	this.message = null;
+	this.messageParams = null;
 };
 
 /**
- * Set the outcome of the validator of the current constraint.
+ * Set the outcome of the validator of the current constraint as a {@link ValidationResult}.
  *
  * @param {boolean} validityFlag - Whether the constraint with the current <code>constraintName</code> is fullfilled (i.e. <code>true</code> means valid).
  */
 ValidationContext.prototype.addResult = function(validityFlag) {
-	// jshint unused:false
+	var i, curPath, result;
+	curPath = this.path[this.path.length-1];
+	result = new ValidationResult(validityFlag, this.message, this.messageParams);
+	if( !curPath._validity ) {
+		curPath._validity = {};
+	}
+	curPath._validity[this.constraintName] = result;
+	if( !validityFlag ) {
+		curPath._thisValid = false;
+		for( i=this.path.length-2; i >= 0; i-- ) {
+			this.path[i]._childrenValid = false;
+		}
+	}
+};
 
+/**
+ * Set the message related to the current result.
+ *
+ * @param {string} msg - The message.
+ */
+ValidationContext.prototype.setMessage = function(msg) {
+	this.message = msg;
+};
+
+/**
+ * Set the parameters for the current message.
+ *
+ * @param {object} params - The message parameters.
+ */
+ValidationContext.prototype.setMessageParams = function(params) {
+	this.messageParams = params;
 };
 
 /**
@@ -113,9 +164,12 @@ ValidationContext.prototype.addResult = function(validityFlag) {
  * @param {string} path - Name of the property just entered.
  */
 ValidationContext.prototype.pushPath = function(path) {
-	var curPath = this.path[this.path.length-1], newPath = { _validity: null, _children: null };
+	var curPath = this.path[this.path.length-1], newPath = { _thisValid: true, _validity: null, _children: null };
 	if( !curPath._children ) {
 		curPath._children = (typeof(path) === 'number' ? [] : {});
+	}
+	if( typeof(curPath._childrenValid) === 'undefined' ) {
+		curPath._childrenValid = true;
 	}
 	curPath._children[path] = newPath;
 	this.path.push(newPath);
@@ -126,14 +180,4 @@ ValidationContext.prototype.pushPath = function(path) {
  */
 ValidationContext.prototype.popPath = function() {
 	this.path.pop();
-};
-
-/**
- * X
- *
- * @returns {boolean}
- */
-ValidationContext.hasValidationErrors = function() {
-	// jshint unused:false
-
 };
