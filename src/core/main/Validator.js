@@ -39,22 +39,23 @@ Validator.DEFAULT_GROUPS = ['default'];
  * @returns {ValidationContext}
  */
 Validator.prototype.validate = function(model, eager, groups) {
-	var props, vctx = new ValidationContext(), nparams = 3;
+	var props, vctx = new ValidationContext(), nparams = 3, calculatedEager = eager, calculatedGroups = groups;
 	if( model != null ) {
-		if( typeof(groups) === "boolean" ) {
-			eager = groups;
-			groups = null;
-		}
-		if( !angular.isArray(groups) ) {
-			groups = Validator.DEFAULT_GROUPS;
+		if( Array.isArray(calculatedEager) ) {
+			calculatedGroups = calculatedEager;
+			calculatedEager = false;
 			nparams -= 1;
 		}
-		if( typeof(eager) !== "boolean" ) {
-			eager = false;
+		if( !Array.isArray(calculatedGroups) ) {
+			calculatedGroups = null;
+			nparams -= 1;
+		}
+		if( typeof(calculatedEager) !== "boolean" ) {
+			calculatedEager = false;
 			nparams -= 1;
 		}
 		props = arguments.length > nparams ? Array.prototype.slice.call(arguments, nparams) : null;
-		validateProperties(model, null, vctx, eager, groups, props);
+		this.validateProperties(vctx, model, null, calculatedEager, calculatedGroups, props);
 	}
 	return vctx;
 };

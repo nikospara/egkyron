@@ -294,5 +294,53 @@ describe('The Validator', function() {
 			expect(vctx.result._childrenValid).toBeUndefined();
 			expect(v.validateProperties).not.toHaveBeenCalled();
 		});
+
+		it('passes the model to validateProperties() with eager=false', function() {
+			var model = {};
+			vctx = v.validate(model);
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, false, null, null);
+		});
+
+		it('passes eager to validateProperties()', function() {
+			var model = {};
+			vctx = v.validate(model, true);
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, true, null, null);
+		});
+
+		it('eager is optional, and groups are passed on to validateProperties()', function() {
+			var model = {};
+			vctx = v.validate(model, ['GROUPS']);
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, false, ['GROUPS'], null);
+		});
+
+		it('both eager and groups can be specified', function() {
+			var model = {};
+			vctx = v.validate(model, true, ['GROUPS']);
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, true, ['GROUPS'], null);
+		});
+
+		it('any extra arguments are passed on as props', function() {
+			var model = {};
+			vctx = v.validate(model, true, ['GROUPS'], 'foo', 'bar');
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, true, ['GROUPS'], ['foo', 'bar']);
+		});
+
+		it('any extra arguments are passed on as props, and groups can be omitted', function() {
+			var model = {};
+			vctx = v.validate(model, true, 'foo', 'bar');
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, true, null, ['foo', 'bar']);
+		});
+
+		it('any extra arguments are passed on as props, and eager can be omitted', function() {
+			var model = {};
+			vctx = v.validate(model, ['GROUPS'], 'foo', 'bar');
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, false, ['GROUPS'], ['foo', 'bar']);
+		});
+
+		it('any extra arguments are passed on as props, and both groups and eager can be omitted', function() {
+			var model = {};
+			vctx = v.validate(model, 'foo', 'bar');
+			expect(v.validateProperties).toHaveBeenCalledWith(vctx, model, null, false, null, ['foo', 'bar']);
+		});
 	});
 });
