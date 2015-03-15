@@ -1,5 +1,6 @@
 /* exported Validator */
 /* global Constraint */
+/* global ValidationContext */
 /**
  * The core object for validation.
  *
@@ -261,6 +262,8 @@ function inGroups(constraint, requiredGroups) {
 	return false;
 }
 
+
+
 /**
  * A registry for {@linkplain Constraint~validator validator functions}.
  *
@@ -286,6 +289,8 @@ function inGroups(constraint, requiredGroups) {
  * @param {Constraint~validator} validator - The validator.
  */
 
+
+
 /**
  * A strategy for extracting validation information and introspecting the model.
  *
@@ -293,7 +298,7 @@ function inGroups(constraint, requiredGroups) {
  * @class
  */
 /**
- * Get a registered validator.
+ * Extract the validity constraints for a property, given the model and, optionally, its type.
  *
  * @method extractConstraintsFromContext
  *
@@ -302,6 +307,7 @@ function inGroups(constraint, requiredGroups) {
  * @param {*} model - The model object to validate.
  * @param {string} type - Type of the object (an optional key for the validation constraints set)
  * @param {string} propertyName - Name of the property to validate.
+ * @returns {Constraint[]|any[]} - Array of constraints in a format suitable to be passed to {@link Validator#evaluateConstraints}
  */
 /**
  * Enumerate the properties of a model.

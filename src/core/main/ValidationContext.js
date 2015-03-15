@@ -1,4 +1,5 @@
 /* exported ValidationContext */
+/* global ValidationResult */
 /**
  * The validation context carries information about the current validation, as well
  * as the validation result. It is meant to be used for a single validation.
