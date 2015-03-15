@@ -1,19 +1,24 @@
 var gulp = require('gulp');
 
-gulp.task('jsdoc', function() {
-	var
-		jsdoc = require('gulp-jsdoc'),
-		jshint = require('gulp-jshint');
+gulp.task('jshint', function() {
+	var jshint = require('gulp-jshint');
 
 	return gulp
 		.src('./src/core/main/**/*.js')
 		.pipe(jshint())
 		.pipe(jshint.reporter('jshint-stylish'))
-		.pipe(jshint.reporter('fail'))
+		.pipe(jshint.reporter('fail'));
+});
+
+gulp.task('jsdoc', ['jshint'], function() {
+	var jsdoc = require('gulp-jsdoc');
+
+	return gulp
+		.src('./src/core/main/**/*.js')
 		.pipe(jsdoc('./target/docs/core'));
 });
 
-gulp.task('test', ['package'], function() {
+gulp.task('test', ['jshint', 'package'], function() {
 	var
 		jshint = require('gulp-jshint'),
 		jasmine = require('gulp-jasmine');
