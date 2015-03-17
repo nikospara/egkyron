@@ -77,7 +77,7 @@ Validator.prototype.validate = function(model, eager, groups) {
 Validator.prototype.validateProperties = function(vctx, model, type, eager, groups, props) {
 	var self = this;
 	props = sanitizeProps(props);
-	return this.introspectionStrategy.enumerateProps(model, type, vctx, function(propName) {
+	return this.introspectionStrategy.enumerateProps(vctx, model, type, function(propName) {
 		var ret, constraints, propValue;
 		if( props == null || props.indexOf(propName) >= 0 ) {
 			constraints = self.introspectionStrategy.extractConstraintsFromContext(vctx, model, type, propName);
@@ -315,9 +315,9 @@ function inGroups(constraint, requiredGroups) {
  * @method enumerateProps
  *
  * @memberof IntrospectionStrategy.prototype
+ * @param {ValidationContext} vctx - The validation context.
  * @param {*} model - The model object to validate.
  * @param {string} type - Type of the object (an optional key for the validation constraints set).
- * @param {ValidationContext} vctx - The validation context.
  * @param {IntrospectionStrategy~enumeratePropsCallback} callback - The function to call for each property of the <code>model</code>.
  */
 /**

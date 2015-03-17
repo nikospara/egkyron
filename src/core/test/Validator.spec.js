@@ -11,8 +11,8 @@ describe('The Validator', function() {
 	};
 
 	beforeEach(function() {
-		passValidator = jasmine.createSpy('xxx').and.returnValue(true);
-		failValidator = jasmine.createSpy('xxx').and.returnValue(false);
+		passValidator = jasmine.createSpy('passValidator').and.returnValue(true);
+		failValidator = jasmine.createSpy('failValidator').and.returnValue(false);
 	});
 
 	describe('normalizeConstraint method', function() {
@@ -158,7 +158,7 @@ describe('The Validator', function() {
 			var enumeratePropsArgs, callback;
 			v.validateProperties(vctx, model, TYPE);
 			enumeratePropsArgs = introspectionStrategy.enumerateProps.calls.mostRecent().args;
-			expect(enumeratePropsArgs.slice(0,3)).toEqual([model, TYPE, vctx]);
+			expect(enumeratePropsArgs.slice(0,3)).toEqual([vctx, model, TYPE]);
 			callback = enumeratePropsArgs[3];
 			expect(typeof callback).toBe('function');
 		});
@@ -167,7 +167,7 @@ describe('The Validator', function() {
 			var enumeratePropsArgs, callback;
 			v.validateProperties(vctx, model, TYPE, false, Validator.DEFAULT_GROUPS, [PROPNAME1]);
 			enumeratePropsArgs = introspectionStrategy.enumerateProps.calls.mostRecent().args;
-			expect(enumeratePropsArgs.slice(0,3)).toEqual([model, TYPE, vctx]);
+			expect(enumeratePropsArgs.slice(0,3)).toEqual([vctx, model, TYPE]);
 			callback = enumeratePropsArgs[3];
 			callback(PROPNAME0);
 			expect(vctx.pushPath).not.toHaveBeenCalled();
@@ -224,7 +224,7 @@ describe('The Validator', function() {
 				return hasValidationErrors;
 			});
 
-			introspectionStrategy.enumerateProps.and.callFake(function(o, t, vc, cb) {
+			introspectionStrategy.enumerateProps.and.callFake(function(vc, o, t, cb) {
 				var ret;
 
 				if( o === model ) {
