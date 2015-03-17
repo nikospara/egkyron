@@ -21,7 +21,7 @@ ConstructorIntrospector.prototype.extractConstraintsFromModel = function(ctxObje
 
 /**
  */
-ConstructorIntrospector.prototype.enumerateProps = function(model, type, vctx, callback) {
+ConstructorIntrospector.prototype.enumerateProps = function(vctx, model, type, callback) {
 	var x;
 	if( Array.isArray(model) ) {
 		for( x=0; x < model.length; x++ ) {

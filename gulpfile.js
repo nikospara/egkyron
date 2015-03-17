@@ -18,7 +18,7 @@ gulp.task('core.jsdoc', ['core.jshint'], function() {
 		.pipe(jsdoc('./target/docs/core'));
 });
 
-gulp.task('core.test', ['core.jshint', 'core.package'], function() {
+gulp.task('core.test', ['core.jshint', 'core.package.node'], function() {
 	var
 		jshint = require('gulp-jshint'),
 		jasmine = require('gulp-jasmine');
@@ -43,6 +43,7 @@ gulp.task('core.package.node', ['core.jshint'], function() {
 });
 
 
+
 gulp.task('constrat.jshint', function() {
 	var jshint = require('gulp-jshint');
 
@@ -59,6 +60,19 @@ gulp.task('constrat.jsdoc', ['constrat.jshint'], function() {
 	return gulp
 		.src('./src/constraints-strategy/main/**/*.js')
 		.pipe(jsdoc('./target/docs/constraints-strategy'));
+});
+
+gulp.task('constrat.test', ['constrat.jshint', 'constrat.package.node'], function() {
+	var
+		jshint = require('gulp-jshint'),
+		jasmine = require('gulp-jasmine');
+
+	return gulp
+		.src('./src/constraints-strategy/test/**/*.spec.js')
+		.pipe(jshint())
+		.pipe(jshint.reporter('jshint-stylish'))
+		.pipe(jshint.reporter('fail'))
+		.pipe(jasmine({includeStackTrace: true}));
 });
 
 gulp.task('constrat.package.node', ['constrat.jshint'], function() {
