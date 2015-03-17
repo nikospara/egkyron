@@ -2,7 +2,7 @@ describe('The Validator', function() {
 
 	var Validator, registry, passValidator, failValidator;
 
-	Validator = require('../../../target/dist/core/node/Validator');
+	Validator = require('../../../target/dist/node/Validator');
 
 	registry = {
 		getRegisteredValidator: function(name) {

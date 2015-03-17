@@ -1,7 +1,7 @@
 describe('The ValidationContext', function() {
 	
-	var ValidationContext = require('../../../target/dist/core/node/ValidationContext'),
-		ValidationResult = require('../../../target/dist/core/node/ValidationResult');
+	var ValidationContext = require('../../../target/dist/node/ValidationContext'),
+		ValidationResult = require('../../../target/dist/node/ValidationResult');
 
 	it('should construct the correct results', function() {
 		var vctx = new ValidationContext();

@@ -1,6 +1,6 @@
 describe('The ConstructorIntrospector', function() {
 	
-	var ConstructorIntrospector = require('../../../target/dist/core/node/constraints-strategy/ConstructorIntrospector'), sut;
+	var ConstructorIntrospector = require('../../../target/dist/node/introspection-strategy/ConstructorIntrospector'), sut;
 
 	function Model() {
 		this.prop1 = null;
