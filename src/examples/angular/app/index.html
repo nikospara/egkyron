@@ -1,0 +1,47 @@
+<!doctype HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Angular example</title>
+		<link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="container" ng-app="app" ng-controller="MainCtrl as main">
+			<form name="ownerForm" ng-model-options="{allowInvalid: true}">
+				<owner-editor ng-model="main.model.owner"></owner-editor>
+			</form>
+
+			<button class="btn btn-default" ng-click="main.validateInServer()">Validate in server</button>
+			<button class="btn btn-default" ng-click="main.validateInClient()">Validate in client</button>
+
+			<!--
+			<pre>{{ main.model | json }}</pre>
+			-->
+		</div>
+
+		<script src="angular/angular.js"></script>
+		<script src="angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<script src="scripts/app.module.js"></script>
+		<script src="scripts/validation/validation.module.js"></script>
+		<script src="scripts/common/common.module.js"></script>
+		<script src="scripts/shared/Owner.js"></script>
+		<script src="scripts/shared/Pet.js"></script>
+		<script src="scripts/shared/Vaccination.js"></script>
+		<script src="scripts/shared/makeValidatorRegistry.js"></script>
+		<script src="scripts/validation/core/Validator.js"></script>
+		<script src="scripts/validation/core/Constraint.js"></script>
+		<script src="scripts/validation/core/ValidationContext.js"></script>
+		<script src="scripts/validation/core/ValidationResult.js"></script>
+		<script src="scripts/validation/core/ConstructorIntrospector.js"></script>
+		<script src="scripts/main/MainCtrl.js"></script>
+		<script src="scripts/main/ownerEditor.js"></script>
+		<script src="scripts/main/petEditor.js"></script>
+		<script src="scripts/main/vaccinationEditor.js"></script>
+		<script src="scripts/main/validator.js"></script>
+		<script src="scripts/main/validationResultModal/ValidationResultModalCtrl.js"></script>
+		<script src="scripts/common/panelCollectionEditor.js"></script>
+		<script src="scripts/common/domUtils.js"></script>
+	</body>
+</html>

@@ -85,3 +85,12 @@ gulp.task('intstrat.package.node', ['intstrat.jshint'], function() {
 		.pipe(tap(affix('./src/packaging/node/introspection-strategy/')))
 		.pipe(gulp.dest('./target/dist/node/introspection-strategy'));
 });
+
+
+
+gulp.task('ngdoc', function() {
+	var gulpDocs = require('gulp-ngdocs');
+	return gulp.src('./src/environment-adaptor/angular/main/*.js')
+		.pipe(gulpDocs.process())
+		.pipe(gulp.dest('./target/docs/environment-adaptor/angular'));
+});

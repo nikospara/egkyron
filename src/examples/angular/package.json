@@ -1,6 +1,7 @@
 {
-	"name": "validation",
+	"name": "validation-example-angular",
 	"version": "0.1.0",
+	"private": true,
 	"dependencies": {
 
 	},
@@ -8,9 +9,9 @@
 		"gulp": "*",
 		"gulp-jshint": "*",
 		"jshint-stylish": "*",
-		"gulp-jsdoc": "*",
-		"gulp-ngdocs": "*",
-		"gulp-jasmine": "*",
-		"gulp-tap": "*"
+		"gulp-tap": "*",
+		"express": "*",
+		"body-parser": "*",
+		"bower": "*"
 	}
 }
