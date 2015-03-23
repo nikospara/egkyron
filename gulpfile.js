@@ -42,6 +42,17 @@ gulp.task('core.package.node', ['core.jshint'], function() {
 		.pipe(gulp.dest('./target/dist/node'));
 });
 
+gulp.task('core.package.angular', ['core.jshint'], function() {
+	var
+		tap = require('gulp-tap'),
+		affix = require('./src/build/gulp-affix.js');
+
+	return gulp
+		.src('./src/core/main/**/*.js')
+		.pipe(tap(affix('./src/packaging/angular/')))
+		.pipe(gulp.dest('./target/dist/angular'));
+});
+
 
 
 gulp.task('intstrat.jshint', function() {
@@ -86,11 +97,31 @@ gulp.task('intstrat.package.node', ['intstrat.jshint'], function() {
 		.pipe(gulp.dest('./target/dist/node/introspection-strategy'));
 });
 
+gulp.task('intstrat.package.angular', ['intstrat.jshint'], function() {
+	var
+		tap = require('gulp-tap'),
+		affix = require('./src/build/gulp-affix.js');
+
+	return gulp
+		.src('./src/introspection-strategy/main/**/*.js')
+		.pipe(tap(affix('./src/packaging/angular/introspection-strategy/')))
+		.pipe(gulp.dest('./target/dist/angular/introspection-strategy'));
+});
 
 
-gulp.task('ngdoc', function() {
+
+gulp.task('ngdoc', ['core.package.angular', 'intstrat.package.angular'], function() {
 	var gulpDocs = require('gulp-ngdocs');
-	return gulp.src('./src/environment-adaptor/angular/main/*.js')
+	return gulp.src(['./src/environment-adaptor/angular/main/*.js', './target/dist/angular/**/*.js'])
 		.pipe(gulpDocs.process())
 		.pipe(gulp.dest('./target/docs/environment-adaptor/angular'));
+});
+
+gulp.task('ngdoc.serve', ['ngdoc'], function() {
+	var
+		express = require('express'),
+		app = express();
+
+	app.use(express.static('target/docs/environment-adaptor/angular'));
+	app.listen(8000);
 });

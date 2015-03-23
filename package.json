@@ -11,6 +11,7 @@
 		"gulp-jsdoc": "*",
 		"gulp-ngdocs": "*",
 		"gulp-jasmine": "*",
-		"gulp-tap": "*"
+		"gulp-tap": "*",
+		"express": "*"
 	}
 }
