@@ -13,7 +13,7 @@ gulp.task('package.node', function() {
 	return gulp
 		.src('./shared/**/*.js')
 		.pipe(tap(affix('./packaging/node/')))
-		.pipe(gulp.dest('./target/shared'));
+		.pipe(gulp.dest('./target/node/shared'));
 });
 
 gulp.task('package.angular', function() {
@@ -24,5 +24,5 @@ gulp.task('package.angular', function() {
 	return gulp
 		.src('./shared/**/*.js')
 		.pipe(tap(affix('./packaging/angular/')))
-		.pipe(gulp.dest('./app/scripts/shared'));
+		.pipe(gulp.dest('./target/web/shared'));
 });

@@ -4,16 +4,19 @@ var
 	express = require('express'),
 	bodyParser = require('body-parser'),
 	app = express(),
-	Owner = require('./target/shared/Owner'),
-	Pet = require('./target/shared/Pet'),
-	Vaccination = require('./target/shared/Vaccination'),
+	Owner = require('./target/node/shared/Owner'),
+	Pet = require('./target/node/shared/Pet'),
+	Vaccination = require('./target/node/shared/Vaccination'),
 	Validator = require('../../../target/dist/node/Validator'),
 	ConstructorIntrospector = require('../../../target/dist/node/introspection-strategy/ConstructorIntrospector'),
-	validatorRegistry = require('./target/shared/makeValidatorRegistry')();
+	validatorRegistry = require('./target/node/shared/makeValidatorRegistry')();
 
 app.use(bodyParser.json());
 app.use(express.static('app'));
 app.use(express.static('bower_components'));
+app.use(express.static('../../../target'));
+app.use(express.static('../../environment-adaptor/angular'));
+app.use(express.static('target/web'));
 
 app.post('/api/Owner', function (req, res) {
 	var
