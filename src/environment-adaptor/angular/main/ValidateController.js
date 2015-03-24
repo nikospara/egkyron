@@ -1,14 +1,20 @@
-angular.module('validation').controller('ValidateController', ['$scope', '$attrs', 'ValidationContext', 'validator', function ValidateController($scope, $attrs, ValidationContext, validator) {
+angular.module('validation').controller('ValidateController', ['$scope', '$attrs', 'ValidationContext', function ValidateController($scope, $attrs, ValidationContext) {
 
-	var unwatch, ngModel, processedModelExpression, EMPTY_OBJECT = {}, controller = this;
+	var unwatch, ngModel, processedModelExpression, validator, EMPTY_OBJECT = {}, controller = this;
 
-	processedModelExpression = validator.introspectionStrategy.processModelExpression($attrs.ngModel);
+	function configure(ngModelValue, validatorValue) {
+		ngModel = ngModelValue;
+		validator = validatorValue;
 
-	function setNgModel(value) {
-		ngModel = value;
-		if( ngModel && ngModel.$validators ) {
-			ngModel.$validators.validate = validate;
+		if( !ngModel ) {
+			throw new Error('the ngModel is required');
 		}
+		if( !validator ) {
+			throw new Error('the validator is required');
+		}
+
+		processedModelExpression = validator.introspectionStrategy.processModelExpression($attrs.ngModel);
+		ngModel.$validators.validate = validate;
 	}
 
 	function watchValidity() {
@@ -70,7 +76,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	}
 
 	angular.extend(this, {
-		setNgModel: setNgModel,
+		configure: configure,
 		watchValidity: watchValidity,
 		unwatchValidity: unwatchValidity,
 		handleMessage: handleMessage

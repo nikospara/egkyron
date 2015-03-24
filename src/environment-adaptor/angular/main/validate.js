@@ -1,4 +1,4 @@
-angular.module('validation').directive('validate', function() {
+angular.module('validation').directive('validate', ['validator', function(validator) {
 	return {
 		restrict: 'A',
 		scope: false,
@@ -6,10 +6,10 @@ angular.module('validation').directive('validate', function() {
 		require: ['validate', 'ngModel'],
 		link: function(scope, elem, attrs, ctrls) {
 			var validate = ctrls[0], ngModel = ctrls[1];
-			validate.setNgModel(ngModel);
+			validate.configure(ngModel, validator);
 			if( typeof(attrs.validateNoWatch) === 'undefined' ) {
 				validate.watchValidity();
 			}
 		}
 	};
-});
+}]);

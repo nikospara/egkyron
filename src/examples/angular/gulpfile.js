@@ -2,7 +2,7 @@ var gulp = require('gulp');
 
 gulp.task('default', ['package.node', 'package.angular'], function() {
 	var app = require('./app');
-	app.listen(3000);
+	app.listen(4000);
 });
 
 gulp.task('package.node', function() {
