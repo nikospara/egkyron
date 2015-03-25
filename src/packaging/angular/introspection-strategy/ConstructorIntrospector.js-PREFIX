@@ -1,2 +1,2 @@
-angular.module('validation').factory('ConstructorIntrospector', [function() {
+angular.module('validation').factory('ConstructorIntrospector', ['BaseJsonIntrospector', function(BaseJsonIntrospector) {
 
