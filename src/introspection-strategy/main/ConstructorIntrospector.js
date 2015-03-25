@@ -65,7 +65,8 @@ ConstructorIntrospector.prototype.extractConstraintsFromModel = function(model, 
  * How are all the validators extracted from a model.
  * @protected
  */
-ConstructorIntrospector.prototype.extractValidatorsFromModel = function(vctx, model) {
+ConstructorIntrospector.prototype.extractValidatorsFromModel = function(vctx, model, type) {
+	// jshint unused:false
 	return model && model.constructor.validators || {};
 };
 

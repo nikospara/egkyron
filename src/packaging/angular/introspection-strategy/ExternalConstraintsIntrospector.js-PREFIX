@@ -1,0 +1,2 @@
+angular.module('validation').factory('ExternalConstraintsIntrospector', ['BaseJsonIntrospector', function(BaseJsonIntrospector) {
+

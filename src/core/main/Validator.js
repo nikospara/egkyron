@@ -56,7 +56,7 @@ Validator.prototype.validate = function(model, eager, groups) {
 			nparams -= 1;
 		}
 		props = arguments.length > nparams ? Array.prototype.slice.call(arguments, nparams) : null;
-		this.validateProperties(vctx, model, null, calculatedEager, calculatedGroups, props);
+		this.validateProperties(vctx, model, this.introspectionStrategy.findType(vctx, null, null), calculatedEager, calculatedGroups, props);
 	}
 	return vctx;
 };
