@@ -1,5 +1,9 @@
 var gulp = require('gulp');
 
+
+gulp.task('default', ['core.test', 'core.package.angular', 'intstrat.test', 'intstrat.package.angular']);
+
+
 gulp.task('core.jshint', function() {
 	var jshint = require('gulp-jshint');
 
