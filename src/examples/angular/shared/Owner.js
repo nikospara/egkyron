@@ -9,5 +9,6 @@ Owner.validators = {
 //		'required',
 		'nospaces',
 		['length', {min: 2, max: 20}]
-	]
+	],
+	pets: null
 };
