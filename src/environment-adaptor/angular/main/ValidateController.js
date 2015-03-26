@@ -15,6 +15,8 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 		processedModelExpression = validator.introspectionStrategy.processModelExpression($attrs.ngModel);
 		ngModel.$validators.validate = validate;
+
+		return processedModelExpression;
 	}
 
 	function watchValidity() {
@@ -61,7 +63,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 			validationContext = new ValidationContext(),
 			validationArgs;
 
-		validationArgs = validator.introspectionStrategy.prepareValidationFromScope($scope, processedModelExpression);
+		validationArgs = validator.introspectionStrategy.prepareValidationFromScope($scope, processedModelExpression, controller.getType());
 		validator.evaluateConstraints(validationContext, validationArgs.constraints, validationArgs.ctxObject, value, eager);
 
 		return validationContext.result;
@@ -69,6 +71,15 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	function handleMessage(validatorKey, validationResult) {
 		// INTENDED TO BE IMPLEMENTED BY SUBCLASSES
+	}
+
+	/**
+	 * Get the type of the object that contains the property being edited by this control.
+	 * @returns {string} - The type as string, or any other object as defined by the introspector
+	 */
+	function getType() {
+		// INTENDED TO BE IMPLEMENTED BY SUBCLASSES
+		return null;
 	}
 
 	function isValid(results) {
@@ -79,6 +90,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 		configure: configure,
 		watchValidity: watchValidity,
 		unwatchValidity: unwatchValidity,
-		handleMessage: handleMessage
+		handleMessage: handleMessage,
+		getType: getType
 	});
 }]);

@@ -1,6 +1,10 @@
 angular.module('app').controller('MainCtrl', ['$http', 'Owner', 'validator', '$modal', function($http, Owner, validator, $modal) {
 	this.model = {
-		owner: new Owner()
+		owner: new Owner({
+			pets: [
+				{ name: '12345 7890x' }
+			]
+		})
 	};
 
 	this.validateInServer = function() {

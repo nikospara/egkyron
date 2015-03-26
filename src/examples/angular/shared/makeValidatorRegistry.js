@@ -1,10 +1,10 @@
 function makeValidatorRegistry() {
 	var registry = {
-		nospaces: function(/* `this` is the parent object of the value */ value, validationContext, validationParameters) {
+		nospaces: function(/* `this` is the parent object of the value */ value, validationParameters, validationContext) {
 			return value == null || (value.indexOf(' ') < 0 && value.indexOf('\t') < 0);
 		},
 
-		length: function(/* `this` is the parent object of the value */ value, validationContext, validationParameters) {
+		length: function(/* `this` is the parent object of the value */ value, validationParameters, validationContext) {
 			var
 				min = typeof(validationParameters.min) === 'number' ? validationParameters.min : Number.NEGATIVE_INFINITY,
 				max = typeof(validationParameters.max) === 'number' ? validationParameters.max : Number.POSITIVE_INFINITY;

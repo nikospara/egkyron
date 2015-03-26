@@ -120,6 +120,17 @@ function determineValidatorsFromRuleObjectProperty(ruleObjectProperty) {
 }
 
 /**
+ * This is the main logic of retrieving the constraints for a property of the model.
+ * @protected
+ */
+ExternalConstraintsIntrospector.prototype.extractConstraintsFromModel = function(model, propertyName, type) {
+	var
+		validators = this.extractValidatorsFromModel(null, model, type),
+		validatorProp = validators && propertyName && validators[propertyName];
+	return determineValidatorsFromRuleObjectProperty(validatorProp);
+};
+
+/**
  * How are all the validators extracted from a model.
  * @protected
  */

@@ -285,6 +285,8 @@ describe('The Validator', function() {
 
 		beforeEach(function() {
 			v = new Validator();
+			v.introspectionStrategy = jasmine.createSpyObj('introspectionStrategy', ['findType']);
+			v.introspectionStrategy.findType.and.returnValue(null);
 			spyOn(v, 'validateProperties');
 		});
 

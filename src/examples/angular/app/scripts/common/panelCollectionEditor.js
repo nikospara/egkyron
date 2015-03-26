@@ -5,7 +5,7 @@ angular.module('common').directive('panelCollectionEditor', ['$compile', 'domUti
 			addItem: '&',
 			removeItem: '&'
 		},
-		require: ['ngModel'],
+		require: ['ngModel', '?validate'],
 		compile: function(tElem) {
 			var header, editor;
 
@@ -23,6 +23,12 @@ angular.module('common').directive('panelCollectionEditor', ['$compile', 'domUti
 			tElem.empty();
 			
 			return {
+				pre: function(scope, elem, attrs, ctrls) {
+					var validateCtrl = ctrls[1];
+					if( validateCtrl ) {
+						validateCtrl.skipIndex();
+					}
+				},
 				post: function(scope, elem, attrs, ctrls) {
 					var ngModel = ctrls[0], defaultIsEmpty = ngModel.$isEmpty, unwatchViewValue, varName = attrs.varName || 'item';
 
