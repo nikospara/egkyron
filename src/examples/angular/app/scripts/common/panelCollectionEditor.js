@@ -25,7 +25,7 @@ angular.module('common').directive('panelCollectionEditor', ['$compile', 'domUti
 			return {
 				pre: function(scope, elem, attrs, ctrls) {
 					var validateCtrl = ctrls[1];
-					if( validateCtrl ) {
+					if( validateCtrl && angular.isFunction(validateCtrl.skipIndex) ) {
 						validateCtrl.skipIndex();
 					}
 				},

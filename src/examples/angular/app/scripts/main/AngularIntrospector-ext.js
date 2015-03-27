@@ -1,4 +1,4 @@
-angular.module('app').factory('validator', ['$parse', 'validatorRegistry', 'Validator', 'ExternalConstraintsIntrospector', function($parse, validatorRegistry, Validator, ExternalConstraintsIntrospector) {
+angular.module('app').factory('AngularIntrospector', ['$parse', 'validatorRegistry', 'ExternalConstraintsIntrospector', function($parse, validatorRegistry, ExternalConstraintsIntrospector) {
 
 	function findMatchingBracketBackwards(expr, index) {
 		// jshint unused: false
@@ -46,27 +46,5 @@ angular.module('app').factory('validator', ['$parse', 'validatorRegistry', 'Vali
 		};
 	};
 
-	return new Validator(validatorRegistry, new AngularIntrospector({
-		'Owner': {
-			name: [
-//				'required',
-				'nospaces',
-				['length', {min: 2, max: 20}]
-			],
-			pets: {
-				type: 'Pet[]'
-			}
-		},
-		'Pet': {
-			name: [
-//				'required',
-				'nospaces',
-				['length', {min: 2, max: 10}]
-			],
-			vaccinations: 'Vaccination[]'
-		},
-		'Vaccination': {
-
-		}
-	}, 'Owner'));
+	return AngularIntrospector;
 }]);

@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<div class="container" ng-app="app" ng-controller="MainCtrl as main">
-			<form name="ownerForm" ng-model-options="{allowInvalid: true}">
+			<form name="ownerForm" ng-model-options="{allowInvalid: true}" validator="main.validator">
 				<owner-editor ng-model="main.model.owner"></owner-editor>
 			</form>
 
@@ -26,10 +26,13 @@
 		<script src="scripts/app.module.js"></script>
 		<script src="main/validation.module.js"></script>
 		<script src="scripts/common/common.module.js"></script>
+
 		<script src="shared/Owner.js"></script>
 		<script src="shared/Pet.js"></script>
 		<script src="shared/Vaccination.js"></script>
 		<script src="shared/makeValidatorRegistry.js"></script>
+
+		
 		<script src="dist/angular/Validator.js"></script>
 		<script src="dist/angular/Constraint.js"></script>
 		<script src="dist/angular/ValidationContext.js"></script>
@@ -38,6 +41,8 @@
 		<script src="dist/angular/introspection-strategy/BaseJsonIntrospector.js"></script>
 		<script src="dist/angular/introspection-strategy/ConstructorIntrospector.js"></script>
 		
+		<script src="scripts/main/validator.js"></script>
+		<script src="scripts/main/validatorFactory-constr.js"></script>
 		<script src="scripts/main/validate-constr.js"></script>
 		<script src="scripts/main/validityCoordinator.js"></script>
 
@@ -47,7 +52,7 @@
 		<script src="scripts/main/ownerEditor.js"></script>
 		<script src="scripts/main/petEditor.js"></script>
 		<script src="scripts/main/vaccinationEditor.js"></script>
-		<script src="scripts/main/validator-constr.js"></script>
+		<script src="scripts/main/AngularIntrospector-constr.js"></script>
 		<script src="scripts/main/validationResultModal/ValidationResultModalCtrl.js"></script>
 
 		<script src="scripts/common/panelCollectionEditor.js"></script>

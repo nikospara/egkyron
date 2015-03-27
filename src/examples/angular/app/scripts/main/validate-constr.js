@@ -1,11 +1,15 @@
-angular.module('validation').directive('validate', ['validator', function(validator) {
+angular.module('validation').directive('validate', function() {
 	return {
 		restrict: 'A',
 		scope: false,
 		controller: 'ValidateController',
-		require: ['validate', 'ngModel', '?^validityCoordinator'],
+		require: ['validate', 'ngModel', '?^validityCoordinator', '^validator'],
 		link: function(scope, elem, attrs, ctrls) {
-			var validate = ctrls[0], ngModel = ctrls[1], validityCoordinator = ctrls[2];
+			var
+				validate = ctrls[0],
+				ngModel = ctrls[1],
+				validityCoordinator = ctrls[2],
+				validator = ctrls[3].getValidator();
 
 			validate.configure(ngModel, validator);
 
@@ -23,4 +27,4 @@ angular.module('validation').directive('validate', ['validator', function(valida
 			}
 		}
 	};
-}]);
+});

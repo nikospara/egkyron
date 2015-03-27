@@ -1,18 +1,18 @@
-angular.module('app').factory('validator', ['$parse', 'validatorRegistry', 'Validator', 'ConstructorIntrospector', function($parse, validatorRegistry, Validator, ConstructorIntrospector) {
+angular.module('app').factory('AngularIntrospector', ['$parse', 'ConstructorIntrospector', function($parse, ConstructorIntrospector) {
 
 	function findMatchingBracketBackwards(expr, index) {
 		// jshint unused: false
 		throw new Error('UNIMPLEMENTED, USE ONLY DOT FOR NOW!!!');
 	}
 
-	function AngularConstructorIntrospector() {
+	function AngularIntrospector() {
 		ConstructorIntrospector.apply(this);
 	}
 
-	AngularConstructorIntrospector.prototype = new ConstructorIntrospector();
-	AngularConstructorIntrospector.prototype.constructor = AngularConstructorIntrospector;
+	AngularIntrospector.prototype = new ConstructorIntrospector();
+	AngularIntrospector.prototype.constructor = AngularIntrospector;
 
-	AngularConstructorIntrospector.prototype.processModelExpression = function(modelExpression) {
+	AngularIntrospector.prototype.processModelExpression = function(modelExpression) {
 		var
 			indexDot = modelExpression.lastIndexOf("."),
 			indexBracket = modelExpression.lastIndexOf("]"),
@@ -34,7 +34,7 @@ angular.module('app').factory('validator', ['$parse', 'validatorRegistry', 'Vali
 		return ret;
 	};
 
-	AngularConstructorIntrospector.prototype.prepareValidationFromScope = function(scope, processElementResult) {
+	AngularIntrospector.prototype.prepareValidationFromScope = function(scope, processElementResult) {
 		var
 			ctxObject = processElementResult.ctxGetter(scope),
 			propertyName = processElementResult.propNameGetter(scope);
@@ -46,5 +46,5 @@ angular.module('app').factory('validator', ['$parse', 'validatorRegistry', 'Vali
 		};
 	};
 
-	return new Validator(validatorRegistry, new AngularConstructorIntrospector());
+	return AngularIntrospector;
 }]);
