@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 
-gulp.task('default', ['core.test', 'core.package.angular', 'intstrat.test', 'intstrat.package.angular']);
+gulp.task('default', ['core.test', 'core.package.angular', 'intstrat.test', 'intstrat.package.angular', 'envadaptor.test', 'envadaptor.package.angular']);
 
 
 gulp.task('core.jshint', function() {
@@ -113,8 +113,34 @@ gulp.task('intstrat.package.angular', ['intstrat.jshint'], function() {
 });
 
 
+gulp.task('envadaptor.jshint', function() {
+	var jshint = require('gulp-jshint');
 
-gulp.task('ngdoc', ['core.package.angular', 'intstrat.package.angular'], function() {
+	return gulp
+		.src('./src/environment-adaptor/*/main/**/*.js')
+		.pipe(jshint())
+		.pipe(jshint.reporter('jshint-stylish'))
+		.pipe(jshint.reporter('fail'));
+});
+
+gulp.task('envadaptor.test', function(done) {
+	var karma = require('karma').server;
+
+	karma.start({
+		configFile: __dirname + '/src/environment-adaptor/angular/karma.conf.js',
+		singleRun: true
+	}, done);
+});
+
+gulp.task('envadaptor.package.angular', function() {
+	return gulp
+		.src('./src/environment-adaptor/angular/main/**/*.js')
+		.pipe(gulp.dest('./target/dist/angular'));
+});
+
+
+
+gulp.task('ngdoc', ['core.package.angular', 'intstrat.package.angular', 'envadaptor.package.angular'], function() {
 	var gulpDocs = require('gulp-ngdocs');
 	return gulp.src(['./src/environment-adaptor/angular/main/*.js', './target/dist/angular/**/*.js'])
 		.pipe(gulpDocs.process())

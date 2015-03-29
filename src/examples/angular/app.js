@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 app.use(express.static('app'));
 app.use(express.static('bower_components'));
 app.use(express.static('../../../target'));
-app.use(express.static('../../environment-adaptor/angular'));
 app.use(express.static('target/web'));
 
 app.post('/api/Owner', function (req, res) {

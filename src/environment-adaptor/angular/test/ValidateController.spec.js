@@ -1,0 +1,3 @@
+describe('The ValidateController', function() {
+	
+});

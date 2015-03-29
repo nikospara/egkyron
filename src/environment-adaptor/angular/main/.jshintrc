@@ -1,0 +1,8 @@
+{
+	"undef": true,
+	"unused": true,
+	"eqnull": true,
+	"globals": {
+		"angular": true
+	}
+}

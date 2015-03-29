@@ -112,7 +112,6 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	function evaluateConstraints(value, eager) {
 		var
-			isValid = true,
 			validationContext = new ValidationContext(),
 			validationArgs;
 
@@ -133,6 +132,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	 * @param {ValidationResult} validationResult - The validation result
 	 */
 	function handleMessage(validatorKey, validationResult) {
+		// jshint unused: false
 		// INTENTIONALLY BLANK
 	}
 
