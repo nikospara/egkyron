@@ -7,7 +7,16 @@
  */
 angular.module('validation').controller('ValidateController', ['$scope', '$attrs', 'ValidationContext', function ValidateController($scope, $attrs, ValidationContext) {
 
-	var unwatch, ngModel, processedModelExpression, validator, EMPTY_OBJECT = {}, controller = this;
+	var
+		unwatch,
+		ngModel,
+		processedModelExpression,
+		validator,
+		EMPTY_OBJECT = {},
+		controller = this,
+		type = null,
+		childType = null,
+		propName = null;
 
 	/**
 	 * @ngdoc method
@@ -18,8 +27,9 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	 *
 	 * @param {NgModelController} ngModelValue - The `NgModelController`
 	 * @param {Validator} validatorValue - The validator to use (see the `validator` directive)
+	 * @param {ValidateController} parentValidate - The validator to use (see the `validator` directive)
 	 */
-	function configure(ngModelValue, validatorValue) {
+	function configure(ngModelValue, validatorValue, parentValidate) {
 		ngModel = ngModelValue;
 		validator = validatorValue;
 
@@ -33,7 +43,14 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 		processedModelExpression = validator.introspectionStrategy.processModelExpression($attrs.ngModel);
 		ngModel.$validators.validate = validate;
 
-		return processedModelExpression;
+		if( parentValidate ) {
+			type = parentValidate.getChildType();
+		}
+		else {
+			type = validator.introspectionStrategy.findType();
+		}
+		propName = processedModelExpression.propNameGetter($scope);
+		childType = validator.introspectionStrategy.findType(null, type, propName);
 	}
 
 	/**
@@ -125,13 +142,11 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	 *
 	 * @description
 	 * Get the type of the object that contains the property being edited by this control.
-	 * This is intended to be implemented by the directive, if the validation metadata is
-	 * external from the model (see <code>ExternalConstraintsIntrospector</code>).
 	 *
 	 * @returns {string} - The type as string, or any other object as defined by the introspector
 	 */
 	function getType() {
-		return null;
+		return type;
 	}
 
 	/**
@@ -141,13 +156,11 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	 * @description
 	 * Get the type of the the property being edited by this control, to be used by nested validation
 	 * directives to determine the type of their object.
-	 * This is intended to be implemented by the directive, if the validation metadata is
-	 * external from the model (see <code>ExternalConstraintsIntrospector</code>).
 	 *
 	 * @returns {string} - The child type as string, or any other object as defined by the introspector
 	 */
 	function getChildType() {
-		return null;
+		return childType;
 	}
 
 	/**
@@ -157,11 +170,11 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	 * @description
 	 * Instruct {@link validation.ValidateController#getChildType() `getChildType()`} to return the type of the array elements,
 	 * if the type of the property being edited is array.
-	 * This is intended to be implemented by the directive, if the validation metadata is
-	 * external from the model (see <code>ExternalConstraintsIntrospector</code>).
 	 */
 	function skipIndex() {
-		// INTENTIONALLY BLANK
+		if( childType && childType.indexOf('[]') === childType.length-2 ) {
+			childType = childType.substring(0, childType.length-2);
+		}
 	}
 
 	function isValid(results) {
