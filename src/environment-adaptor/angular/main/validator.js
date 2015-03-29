@@ -6,14 +6,6 @@
  * @description
  * Specify the validator to be used for all the child elements.
  *
- * @example
-	<example module="validation">
-		<file name="index.html">
-			<form validator="ctrl.validator">
-				...
-			</form>
-		</file>
-	</example>
  */
 angular.module('validation').directive('validator', function() {
 	return {
