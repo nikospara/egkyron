@@ -1,7 +1,24 @@
+/**
+ * @ngdoc type
+ * @name validation.ValidateController
+ *
+ * @description
+ * A controller to use in validation directives.
+ */
 angular.module('validation').controller('ValidateController', ['$scope', '$attrs', 'ValidationContext', function ValidateController($scope, $attrs, ValidationContext) {
 
 	var unwatch, ngModel, processedModelExpression, validator, EMPTY_OBJECT = {}, controller = this;
 
+	/**
+	 * @ngdoc method
+	 * @name validation.ValidateController#configure
+	 *
+	 * @description
+	 * Provide the controller with the required and optional dependencies.
+	 *
+	 * @param {NgModelController} ngModelValue - The `NgModelController`
+	 * @param {Validator} validatorValue - The validator to use (see the `validator` directive)
+	 */
 	function configure(ngModelValue, validatorValue) {
 		ngModel = ngModelValue;
 		validator = validatorValue;
@@ -19,20 +36,39 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 		return processedModelExpression;
 	}
 
+	/**
+	 * @ngdoc method
+	 * @name validation.ValidateController#watchValidity
+	 *
+	 * @description
+	 * Watch the validity of this model.
+	 *
+	 * Watches can be expensive, so it is made optional. A watch on the validity is
+	 * required if the validity this field depends on others.
+	 */
 	function watchValidity() {
-		unwatch = $scope.$watch(
-			function() {
-				var results = evaluateConstraints(ngModel.$modelValue, true);
-				return isValid(results);
-			},
-			function(newval, oldval) {
-				if( newval !== oldval ) {
-					ngModel.$validate();
+		if( !unwatch ) {
+			unwatch = $scope.$watch(
+				function() {
+					var results = evaluateConstraints(ngModel.$modelValue, true);
+					return isValid(results);
+				},
+				function(newval, oldval) {
+					if( newval !== oldval ) {
+						ngModel.$validate();
+					}
 				}
-			}
-		);
+			);
+		}
 	}
 
+	/**
+	 * @ngdoc method
+	 * @name validation.ValidateController#unwatchValidity
+	 *
+	 * @description
+	 * Stop watch the validity of this model.
+	 */
 	function unwatchValidity() {
 		if( angular.isFunction(unwatch) ) {
 			unwatch();
@@ -69,17 +105,63 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 		return validationContext.result;
 	}
 
+	/**
+	 * @ngdoc method
+	 * @name validation.ValidateController#handleMessage
+	 *
+	 * @description
+	 * Implement this method to handle validation messages.
+	 *
+	 * @param {string} validatorKey - The validator key (e.g. <code>required</code> or <code>regExp</code>)
+	 * @param {ValidationResult} validationResult - The validation result
+	 */
 	function handleMessage(validatorKey, validationResult) {
-		// INTENDED TO BE IMPLEMENTED BY SUBCLASSES
+		// INTENTIONALLY BLANK
 	}
 
 	/**
+	 * @ngdoc method
+	 * @name validation.ValidateController#getType
+	 *
+	 * @description
 	 * Get the type of the object that contains the property being edited by this control.
+	 * This is intended to be implemented by the directive, if the validation metadata is
+	 * external from the model (see <code>ExternalConstraintsIntrospector</code>).
+	 *
 	 * @returns {string} - The type as string, or any other object as defined by the introspector
 	 */
 	function getType() {
-		// INTENDED TO BE IMPLEMENTED BY SUBCLASSES
 		return null;
+	}
+
+	/**
+	 * @ngdoc method
+	 * @name validation.ValidateController#getChildType
+	 *
+	 * @description
+	 * Get the type of the the property being edited by this control, to be used by nested validation
+	 * directives to determine the type of their object.
+	 * This is intended to be implemented by the directive, if the validation metadata is
+	 * external from the model (see <code>ExternalConstraintsIntrospector</code>).
+	 *
+	 * @returns {string} - The child type as string, or any other object as defined by the introspector
+	 */
+	function getChildType() {
+		return null;
+	}
+
+	/**
+	 * @ngdoc method
+	 * @name validation.ValidateController#skipIndex
+	 *
+	 * @description
+	 * Instruct {@link validation.ValidateController#getChildType() `getChildType()`} to return the type of the array elements,
+	 * if the type of the property being edited is array.
+	 * This is intended to be implemented by the directive, if the validation metadata is
+	 * external from the model (see <code>ExternalConstraintsIntrospector</code>).
+	 */
+	function skipIndex() {
+		// INTENTIONALLY BLANK
 	}
 
 	function isValid(results) {
@@ -91,6 +173,8 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 		watchValidity: watchValidity,
 		unwatchValidity: unwatchValidity,
 		handleMessage: handleMessage,
-		getType: getType
+		getType: getType,
+		getChildType: getChildType,
+		skipIndex: skipIndex
 	});
 }]);
