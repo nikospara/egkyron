@@ -50,7 +50,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 			type = validator.introspectionStrategy.findType();
 		}
 		propName = processedModelExpression.propNameGetter($scope);
-		childType = validator.introspectionStrategy.findType(null, type, propName);
+		childType = validator.introspectionStrategy.findType(null, controller.getType(), propName);
 	}
 
 	/**
@@ -94,15 +94,18 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	}
 
 	function validate(modelValue, viewValue) {
-		var x, r, results = evaluateConstraints(modelValue || viewValue, false);
+		var x, r, validity, results = evaluateConstraints(modelValue || viewValue, false);
 
-		if( !results._validity ) {
-			results._validity = EMPTY_OBJECT;
+		if( !results || !results._validity ) {
+			validity = EMPTY_OBJECT;
+		}
+		else {
+			validity = results._validity;
 		}
 
-		for( x in results._validity ) {
-			if( !results._validity.hasOwnProperty(x) ) continue;
-			r = results._validity[x];
+		for( x in validity ) {
+			if( !validity.hasOwnProperty(x) ) continue;
+			r = validity[x];
 			ngModel.$setValidity(x, r.isValid);
 			controller.handleMessage(x, r);
 		}
@@ -142,6 +145,15 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 	 *
 	 * @description
 	 * Get the type of the object that contains the property being edited by this control.
+	 * This method can be overriden by directives so as to define another type for the object containing
+	 * this property; a use case would be:<br/>
+	 *
+	 * ```
+	 *   <form validator="RootObjectValidator">
+	 *     <input validate ng-model="root.name" /><!-- a property of the Root type -->
+	 *     <input validate ng-model="root.address.street" validate-type="Address" /><!-- a property of the Address type -->
+	 *   </form>
+	 * ```
 	 *
 	 * @returns {string} - The type as string, or any other object as defined by the introspector
 	 */

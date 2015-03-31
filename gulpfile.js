@@ -123,19 +123,29 @@ gulp.task('envadaptor.jshint', function() {
 		.pipe(jshint.reporter('fail'));
 });
 
-gulp.task('envadaptor.test', function(done) {
-	var karma = require('karma').server;
+gulp.task('envadaptor.test.jshint', function() {
+	var jshint = require('gulp-jshint');
 
-	karma.start({
-		configFile: __dirname + '/src/environment-adaptor/angular/karma.conf.js',
-		singleRun: true
-	}, done);
+	return gulp
+		.src('./src/environment-adaptor/*/test/**/*.js')
+		.pipe(jshint())
+		.pipe(jshint.reporter('jshint-stylish'))
+		.pipe(jshint.reporter('fail'));
 });
 
 gulp.task('envadaptor.package.angular', function() {
 	return gulp
 		.src('./src/environment-adaptor/angular/main/**/*.js')
 		.pipe(gulp.dest('./target/dist/angular'));
+});
+
+gulp.task('envadaptor.test', ['envadaptor.jshint', 'envadaptor.test.jshint', 'envadaptor.package.angular', 'core.package.angular'], function(done) {
+	var karma = require('karma').server;
+
+	karma.start({
+		configFile: __dirname + '/src/environment-adaptor/angular/karma.conf.js',
+		singleRun: true
+	}, done);
 });
 
 

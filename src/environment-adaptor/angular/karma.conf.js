@@ -3,7 +3,10 @@ module.exports = function(config) {
 		browsers: ['PhantomJS'],
 		frameworks: ['jasmine'],
 		files: [
-			'main/**/*.js',
+			'../../../bower_components/angular/angular.js',
+			'../../../bower_components/angular-mocks/angular-mocks.js',
+			'../../../target/dist/angular/**/*.module.js',
+			'../../../target/dist/angular/**/*.js',
 			'test/**/*.spec.js'
 		]
 	});
