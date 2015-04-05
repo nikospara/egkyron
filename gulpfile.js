@@ -4,6 +4,7 @@ var gulp = require('gulp');
 gulp.task('default', ['core.test', 'core.package.angular', 'intstrat.test', 'intstrat.package.angular', 'envadaptor.test', 'envadaptor.package.angular']);
 
 
+
 gulp.task('core.jshint', function() {
 	var jshint = require('gulp-jshint');
 
@@ -18,7 +19,7 @@ gulp.task('core.jsdoc', ['core.jshint'], function() {
 	var jsdoc = require('gulp-jsdoc');
 
 	return gulp
-		.src('./src/core/main/**/*.js')
+		.src(['./src/core/README.md', './src/core/main/**/*.js'])
 		.pipe(jsdoc('./target/docs/core'));
 });
 
@@ -42,7 +43,7 @@ gulp.task('core.package.node', ['core.jshint'], function() {
 
 	return gulp
 		.src('./src/core/main/**/*.js')
-		.pipe(tap(affix('./src/packaging/node/')))
+		.pipe(tap(affix('./src/packaging/node/affixes/')))
 		.pipe(gulp.dest('./target/dist/node'));
 });
 
@@ -97,7 +98,7 @@ gulp.task('intstrat.package.node', ['intstrat.jshint'], function() {
 
 	return gulp
 		.src('./src/introspection-strategy/main/**/*.js')
-		.pipe(tap(affix('./src/packaging/node/introspection-strategy/')))
+		.pipe(tap(affix('./src/packaging/node/affixes/introspection-strategy/')))
 		.pipe(gulp.dest('./target/dist/node/introspection-strategy'));
 });
 
@@ -111,6 +112,7 @@ gulp.task('intstrat.package.angular', ['intstrat.jshint'], function() {
 		.pipe(tap(affix('./src/packaging/angular/introspection-strategy/')))
 		.pipe(gulp.dest('./target/dist/angular/introspection-strategy'));
 });
+
 
 
 gulp.task('envadaptor.jshint', function() {

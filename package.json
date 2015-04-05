@@ -1,6 +1,20 @@
 {
 	"name": "validation",
 	"version": "0.1.0",
+	"description": "A validation infrasrtructure library, with the goal of being capable to adapt to various kinds of Javascript model objects, e.g. plain JSON, Knockout etc and environments, e.g. Node, Browser+AngularJS, Browser+Knockout etc",
+	"keywords": "validation",
+	"license": "MIT",
+	"author": {
+		"name": "Nikos Paraskevopoulos",
+		"email": "nikospara@yahoo.com"
+	},
+	"files": [
+		"LICENSE",
+		"README.md",
+		"index.js",
+		"target/dist/node"
+	],
+	"main": "index.js",
 	"dependencies": {
 
 	},
