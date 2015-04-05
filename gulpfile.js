@@ -54,7 +54,7 @@ gulp.task('core.package.angular', ['core.jshint'], function() {
 
 	return gulp
 		.src('./src/core/main/**/*.js')
-		.pipe(tap(affix('./src/packaging/angular/')))
+		.pipe(tap(affix('./src/packaging/angular/affixes/')))
 		.pipe(gulp.dest('./target/dist/angular'));
 });
 
@@ -109,7 +109,7 @@ gulp.task('intstrat.package.angular', ['intstrat.jshint'], function() {
 
 	return gulp
 		.src('./src/introspection-strategy/main/**/*.js')
-		.pipe(tap(affix('./src/packaging/angular/introspection-strategy/')))
+		.pipe(tap(affix('./src/packaging/angular/affixes/introspection-strategy/')))
 		.pipe(gulp.dest('./target/dist/angular/introspection-strategy'));
 });
 
@@ -149,6 +149,31 @@ gulp.task('envadaptor.test', ['envadaptor.jshint', 'envadaptor.test.jshint', 'en
 		singleRun: true
 	}, done);
 });
+
+
+
+gulp.task('bower.angular.sources', ['core.package.angular', 'envadaptor.package.angular', 'intstrat.package.angular'], function() {
+	var
+		concat = require('gulp-concat'),
+		uglify = require('gulp-uglify'),
+		rename = require('gulp-rename'),
+		merge2 = require('merge2');
+
+	return merge2(
+			gulp
+				.src(['./target/dist/angular/*.module.js', './target/dist/angular/*.js'])
+				.pipe(concat('egkyron-core.js'))
+				.pipe(gulp.dest('./target/dist/bower-egkyron-core-angular'))
+				.pipe(uglify())
+				.pipe(rename('egkyron-core.min.js')),
+			gulp
+				.src('./src/packaging/angular/bower-core.json')
+				.pipe(rename('bower.json'))
+		)
+		.pipe(gulp.dest('./target/dist/bower-egkyron-core-angular'));
+});
+
+gulp.task('bower.angular', ['bower.angular.sources']);
 
 
 
