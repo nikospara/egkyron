@@ -15,6 +15,10 @@
 		"target/dist/node"
 	],
 	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url" : "https://github.com/nikospara/egkyron.git"
+	},
 	"dependencies": {
 
 	},
