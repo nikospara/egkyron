@@ -1,2 +1,2 @@
-angular.module('validation').factory('Constraint', [function() {
+angular.module('egkyron').factory('Constraint', [function() {
 

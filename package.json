@@ -1,5 +1,5 @@
 {
-	"name": "validation",
+	"name": "egkyron",
 	"version": "0.1.0",
 	"description": "A validation infrasrtructure library, with the goal of being capable to adapt to various kinds of Javascript model objects, e.g. plain JSON, Knockout etc and environments, e.g. Node, Browser+AngularJS, Browser+Knockout etc",
 	"keywords": "validation",

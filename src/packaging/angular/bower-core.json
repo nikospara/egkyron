@@ -1,5 +1,5 @@
 {
-	"name": "validation",
+	"name": "egkyron",
 	"version": "0.1.0",
 	"main": "egkyron-core.js",
 	"dependencies": {

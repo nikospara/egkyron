@@ -1,11 +1,11 @@
 /**
  * @ngdoc type
- * @name validation.ValidateController
+ * @name egkyron.ValidateController
  *
  * @description
  * A controller to use in validation directives.
  */
-angular.module('validation').controller('ValidateController', ['$scope', '$attrs', 'ValidationContext', function ValidateController($scope, $attrs, ValidationContext) {
+angular.module('egkyron').controller('ValidateController', ['$scope', '$attrs', 'ValidationContext', function ValidateController($scope, $attrs, ValidationContext) {
 
 	var
 		unwatch,
@@ -20,7 +20,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	/**
 	 * @ngdoc method
-	 * @name validation.ValidateController#configure
+	 * @name egkyron.ValidateController#configure
 	 *
 	 * @description
 	 * Provide the controller with the required and optional dependencies.
@@ -55,7 +55,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	/**
 	 * @ngdoc method
-	 * @name validation.ValidateController#watchValidity
+	 * @name egkyron.ValidateController#watchValidity
 	 *
 	 * @description
 	 * Watch the validity of this model.
@@ -81,7 +81,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	/**
 	 * @ngdoc method
-	 * @name validation.ValidateController#unwatchValidity
+	 * @name egkyron.ValidateController#unwatchValidity
 	 *
 	 * @description
 	 * Stop watch the validity of this model.
@@ -126,7 +126,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	/**
 	 * @ngdoc method
-	 * @name validation.ValidateController#handleMessage
+	 * @name egkyron.ValidateController#handleMessage
 	 *
 	 * @description
 	 * Implement this method to handle validation messages.
@@ -141,7 +141,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	/**
 	 * @ngdoc method
-	 * @name validation.ValidateController#getType
+	 * @name egkyron.ValidateController#getType
 	 *
 	 * @description
 	 * Get the type of the object that contains the property being edited by this control.
@@ -163,7 +163,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	/**
 	 * @ngdoc method
-	 * @name validation.ValidateController#getChildType
+	 * @name egkyron.ValidateController#getChildType
 	 *
 	 * @description
 	 * Get the type of the the property being edited by this control, to be used by nested validation
@@ -177,7 +177,7 @@ angular.module('validation').controller('ValidateController', ['$scope', '$attrs
 
 	/**
 	 * @ngdoc method
-	 * @name validation.ValidateController#skipIndex
+	 * @name egkyron.ValidateController#skipIndex
 	 *
 	 * @description
 	 * Instruct {@link validation.ValidateController#getChildType() `getChildType()`} to return the type of the array elements,

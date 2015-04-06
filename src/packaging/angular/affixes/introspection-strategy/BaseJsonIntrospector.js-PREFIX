@@ -1,2 +1,2 @@
-angular.module('validation').factory('BaseJsonIntrospector', [function() {
+angular.module('egkyron').factory('BaseJsonIntrospector', [function() {
 

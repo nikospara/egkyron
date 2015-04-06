@@ -4,7 +4,7 @@ describe('The ValidateController', function() {
 		scope, elem, sut, ngModel, ValidationResult, validatorMock, processedModelExpressionMock, validationArgsMock, resultsMock,
 		parentValidateMock, PARENT_CHILD_TYPE = 'parentChildType', ROOT_TYPE = 'rootType', THIS_CHILD_TYPE1 = 'thisChildType1', THIS_CHILD_TYPE2 = 'thisChildType2';
 
-	beforeEach(module('validation', function($compileProvider) {
+	beforeEach(module('egkyron', function($compileProvider) {
 		// the ValidateController is supposed to be used by a directive, we simulate that here
 		$compileProvider.directive('validate', function() {
 			return {

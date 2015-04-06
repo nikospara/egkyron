@@ -1,2 +1,2 @@
-angular.module('validation').factory('ValidationContext', ['ValidationResult', function(ValidationResult) {
+angular.module('egkyron').factory('ValidationContext', ['ValidationResult', function(ValidationResult) {
 

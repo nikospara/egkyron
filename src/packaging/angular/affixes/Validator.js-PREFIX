@@ -1,2 +1,2 @@
-angular.module('validation').factory('Validator', ['Constraint', 'ValidationContext', function(Constraint, ValidationContext) {
+angular.module('egkyron').factory('Validator', ['Constraint', 'ValidationContext', function(Constraint, ValidationContext) {
 

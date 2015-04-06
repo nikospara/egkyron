@@ -1,13 +1,13 @@
 /**
  * @ngdoc directive
- * @name validation.directive:validator
+ * @name egkyron.directive:validator
  * @function
  *
  * @description
  * Specify the validator to be used for all the child elements.
  *
  */
-angular.module('validation').directive('validator', function() {
+angular.module('egkyron').directive('validator', function() {
 	return {
 		restrict: 'A',
 		scope: false,
