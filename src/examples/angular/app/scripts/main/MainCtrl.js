@@ -1,7 +1,7 @@
-angular.module('app').controller('MainCtrl', ['$http', 'Owner', 'validatorFactory', '$modal', function($http, Owner, validatorFactory, $modal) {
+angular.module('app').controller('MainCtrl', ['Owner', 'validatorFactory', '$modal', function(Owner, validatorFactory, $modal) {
 
 	function validateInServer() {
-		$http.post('api/validate/Owner', this.model.owner)
+		this.validator.validateInServer(this.model.owner)
 			.then(function(response) {
 				openValidationResultModal(response.data);
 			});

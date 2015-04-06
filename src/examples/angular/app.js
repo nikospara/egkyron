@@ -7,9 +7,12 @@ var
 	Owner = require('./target/node/shared/Owner'),
 	Pet = require('./target/node/shared/Pet'),
 	Vaccination = require('./target/node/shared/Vaccination'),
-	Validator = require('../../../target/dist/node/Validator'),
-	ConstructorIntrospector = require('../../../target/dist/node/introspection-strategy/ConstructorIntrospector'),
+	egkyron = require('egkyron'),
+	Validator = egkyron.Validator,
+	ConstructorIntrospector = egkyron.introspectionStrategy.ConstructorIntrospector,
+	ExternalConstraintsIntrospector = egkyron.introspectionStrategy.ExternalConstraintsIntrospector,
 	validatorRegistry = require('./target/node/shared/makeValidatorRegistry')();
+	validationRules = require('./target/node/shared/makeRules')();
 
 app.use(bodyParser.json());
 app.use(express.static('app'));
@@ -17,27 +20,34 @@ app.use(express.static('bower_components'));
 app.use(express.static('../../../target'));
 app.use(express.static('target/web'));
 
-app.post('/api/Owner', function (req, res) {
-	var
-		json = req.body || {},
-		owner = new Owner(json);
-	owner.serverTime = new Date().getTime();
-	res.json(owner);
-});
-
-app.post('/api/validate/Owner', function (req, res) {
+app.post('/api/validate-constr/Owner', function (req, res) {
 	var
 		json = req.body || {},
 		owner = new Owner(json),
-		vctx = validateOwner(owner);
+		vctx = validateOwnerConstr(owner);
 	res.json(vctx ? vctx.result : null);
 });
 
-module.exports = app;
+app.post('/api/validate-ext/Owner', function (req, res) {
+	var
+		json = req.body || {},
+		owner = new Owner(json),
+		vctx = validateOwnerExt(owner);
+	res.json(vctx ? vctx.result : null);
+});
 
-function validateOwner(owner) {
+function validateOwnerConstr(owner) {
 	var validator, constructorIntrospector;
 	constructorIntrospector = new ConstructorIntrospector();
 	validator = new Validator(validatorRegistry, constructorIntrospector);
 	return validator.validate(owner);
 }
+
+function validateOwnerExt(owner) {
+	var validator, constructorIntrospector;
+	extIntrospector = new ExternalConstraintsIntrospector(validationRules, 'Owner');
+	validator = new Validator(validatorRegistry, extIntrospector);
+	return validator.validate(owner);
+}
+
+module.exports = app;
