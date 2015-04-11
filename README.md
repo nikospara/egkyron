@@ -39,23 +39,25 @@ Moreover Egkyron takes care of:
 Example usage
 -------------
 
-	// SETUP
-	//   all the following objects need to be created once and can then be reused
-	// the validatorRegistry knows the various validators
-	var validatorRegistry = makeValidatorRegistry();
-	// the introspector knows how to extract information from the model
-	var introspector = new ConstructorIntrospector();
-	// the validator implements the core logic
-	var validator = new Validator(validatorRegistry, introspector);
+```javascript
+// SETUP
+//   all the following objects need to be created once and can then be reused
+// the validatorRegistry knows the various validators
+var validatorRegistry = makeValidatorRegistry();
+// the introspector knows how to extract information from the model
+var introspector = new ConstructorIntrospector();
+// the validator implements the core logic
+var validator = new Validator(validatorRegistry, introspector);
 
-	// VALIDATE
-	// the data to validate
-	var data = ...
-	// validate and get the results
-	var results = validator.validate(data);
+// VALIDATE
+// the data to validate
+var data = ...
+// validate and get the results
+var results = validator.validate(data);
 
-	// USE THE RESULTS
-	// the overall validity flag
-	var isValid = results._thisValid && results._childrenValid !== false;
-	// the error message for the `required` validator of the `data.name` field
-	var nameErrorMsg = results._children['name']._validity['required'].message;
+// USE THE RESULTS
+// the overall validity flag
+var isValid = results._thisValid && results._childrenValid !== false;
+// the error message for the `required` validator of the `data.name` field
+var nameErrorMsg = results._children['name']._validity['required'].message;
+```
