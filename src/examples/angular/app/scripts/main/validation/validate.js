@@ -24,11 +24,17 @@ angular.module('validation').directive('validate', function() {
 					}
 
 					if( validityCoordinator ) {
+						validate.handleMessage = function(validatorKey, validationResult) {
+							validityCoordinator.handleMessage(validatorKey, validationResult);
+						};
+
 						scope.$watch(
 							function() {
 								return ngModel.$valid;
 							},
-							validityCoordinator.setValid
+							function(newval) {
+								validityCoordinator.setValid(newval);
+							}
 						);
 					}
 				}

@@ -22,6 +22,17 @@ of the display logic.
 
 Currently the core has been implemented, as well as Node and AngularJS integration.
 
+Use cases - what was it made for
+--------------------------------
+
+1. A single, large model, displayed in many views
+2. The need to separate business logic, in this case the validation rules, from the view
+3. No form validation (e.g. server-side)
+
+### Anti-use cases
+
+1. Simple forms
+
 Design
 ------
 

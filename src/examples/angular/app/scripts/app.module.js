@@ -1,1 +1,1 @@
-angular.module('app', ['ui.bootstrap','validation','common']);
+angular.module('app', ['ui.bootstrap','validation','common','ngAnimate']);

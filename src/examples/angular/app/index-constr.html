@@ -6,10 +6,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Angular example - Constructor Introspector</title>
 		<link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+		<link href="css/style.css" rel="stylesheet" />
 	</head>
 	<body>
 		<div class="container" ng-app="app" ng-controller="MainCtrl as main">
-			<form name="ownerForm" ng-model-options="{allowInvalid: true}" validator="main.validator">
+			<form name="ownerForm" ng-model-options="{allowInvalid: true}" validator="main.validator" autocomplete="off" novalidate="novalidate">
 				<owner-editor ng-model="main.model.owner"></owner-editor>
 			</form>
 
@@ -22,6 +23,7 @@
 		</div>
 
 		<script src="angular/angular.js"></script>
+		<script src="angular-animate/angular-animate.js"></script>
 		<script src="angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<script src="scripts/app.module.js"></script>
 		<script src="egkyron-core-angular/egkyron-core.js"></script>
@@ -40,6 +42,7 @@
 		<script src="scripts/main/validation/validatorFactory-constr.js"></script>
 		<script src="scripts/main/validation/validate.js"></script>
 		<script src="scripts/main/validation/validityCoordinator.js"></script>
+		<script src="scripts/main/validation/validityIndicator.js"></script>
 
 		<script src="scripts/main/MainCtrl.js"></script>
 		<script src="scripts/main/ownerEditor.js"></script>

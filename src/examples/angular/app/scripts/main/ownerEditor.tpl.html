@@ -1,6 +1,7 @@
 <div class="form-group" validity-coordinator>
 	<label for="name">Name</label>
 	<input validate ng-model="ctrl.owner.name" type="text" class="form-control" id="name" />
+	<validity-indicator></validity-indicator>
 </div>
 <panel-collection-editor validate ng-model="ctrl.owner.pets" var-name="item" add-item="ctrl.addPet(index)" remove-item="ctrl.removePet(item)">
 	<header><h3>Pets</h3></header>
