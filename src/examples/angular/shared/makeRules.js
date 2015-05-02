@@ -14,7 +14,7 @@ function makeRules() {
 			name: [
 //				'required',
 				'nospaces',
-				['length', {min: 2, max: 10}]
+				['length', {min: 3, max: 10}]
 			],
 			vaccinations: {
 				type: 'Vaccination[]'

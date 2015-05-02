@@ -10,6 +10,6 @@ Pet.validators = {
 	name: [
 //		'required',
 		'nospaces',
-		['length', {min: 2, max: 20}]
+		['length', {min: 3, max: 20}]
 	]
 };

@@ -72,3 +72,12 @@ var isValid = results._thisValid && results._childrenValid !== false;
 // the error message for the `required` validator of the `data.name` field
 var nameErrorMsg = results._children['name']._validity['required'].message;
 ```
+
+Building
+--------
+
+```shell
+npm install
+bower install
+gulp
+```
