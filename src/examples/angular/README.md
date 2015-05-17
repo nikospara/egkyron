@@ -3,6 +3,8 @@ Node and Angular example
 
 This example demonstrates the usage of Egkyron with AngularJS in the client and Node (with Express) in the server.
 
+[Here](http://plnkr.co/edit/PiOuMT) is a plunk version of this example.
+
 ### Running
 
 The example is encapsulated in a Gulp script. Egkyron must have been built before running this example. Run `npm install` and `bower install` and then run `gulp` (running `gulp` also starts the server).

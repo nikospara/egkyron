@@ -9,7 +9,7 @@ angular.module('app').controller('MainCtrl', ['Owner', 'validatorFactory', '$mod
 
 	function validateInClient() {
 		var validationResult = this.validator.validate(this.model.owner);
-		openValidationResultModal(validationResult.result)
+		openValidationResultModal(validationResult.result);
 	}
 
 	function openValidationResultModal(validationResult) {

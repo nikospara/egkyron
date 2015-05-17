@@ -18,6 +18,8 @@ structure containing detailed information about the errors of the model. It is u
 how will these error be displayed. Look in the `src/examples` folder for sample implementations
 of the display logic.
 
+[Here](http://plnkr.co/edit/PiOuMT) is a plunk version of the [Angular example](https://github.com/nikospara/egkyron/tree/master/src/examples/angular).
+
 ### Implementation state
 
 Currently the core has been implemented, as well as Node and AngularJS integration.
