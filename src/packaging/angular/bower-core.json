@@ -1,7 +1,10 @@
 {
-	"name": "egkyron",
-	"version": "0.1.0",
+	"name": "egkyron-core-angular",
+	"version": "0.2.0",
 	"main": "egkyron-core.js",
+	"ignore": [
+		".gitignore"
+	],
 	"keywords": "validation",
 	"dependencies": {
 		"angular": "1.3.x"
