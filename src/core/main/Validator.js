@@ -85,7 +85,7 @@ Validator.prototype.validateProperties = function(vctx, model, type, eager, grou
 			vctx.pushPath(propName);
 			self.evaluateConstraints(vctx, constraints, model, propValue, eager, groups);
 			if( (!eager || !vctx.hasValidationErrors()) && (propValue != null && typeof(propValue) === 'object') ) {
-				if( !(propValue instanceof Date) ) { // add other trivial cases where we do not want to step into object
+				if( !(propValue instanceof Date) && (typeof(self.introspectionStrategy.shouldDescend) !== 'function' || self.introspectionStrategy.shouldDescend(model, propName, type, vctx)) ) {
 					ret = self.validateProperties(vctx, propValue, self.introspectionStrategy.findType(vctx, type, propName), eager, groups);
 					if( ret === false ) {
 						return false;
@@ -342,6 +342,18 @@ function inGroups(constraint, requiredGroups) {
  * @param {string} parentType - Type of the object that contains the property, whose type is requested (an optional key for the validation constraints set).
  * @param {string} propName - The name of the property to evaluate.
  * @returns {string} - The type of the property.
+ */
+/**
+ * Optional member to decide if the validation algorithm should descend into the given property.
+ *
+ * @method shouldDescend
+ *
+ * @memberof IntrospectionStrategy.prototype
+ * @param {*} model - The model object.
+ * @param {string} propName - The name of the property to decide.
+ * @param {string} type - Type of the object (an optional key for the validation constraints set).
+ * @param {ValidationContext} vctx - The validation context.
+ * @returns {boolean} - Whether the validation algorithm should descend into the given property.
  */
 
 /**

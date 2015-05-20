@@ -146,7 +146,7 @@ describe('The Validator', function() {
 	});
 
 	describe('validateProperties method', function() {
-		var vctx, introspectionStrategy, v, model = {}, TYPE = 'THE_TYPE', PROPNAME0 = 'PROPNAME0', PROPNAME1 = 'PROPNAME1', value = 'THE VALUE', hasValidationErrors = false, innerModel;
+		var vctx, introspectionStrategy, v, model = {}, TYPE = 'THE_TYPE', PROPNAME0 = 'PROPNAME0', PROPNAME1 = 'PROPNAME1', value = 'THE VALUE', A_DATE = new Date(), hasValidationErrors = false, innerModel;
 
 		beforeEach(function() {
 			vctx = jasmine.createSpyObj('vctx', ['pushPath', 'popPath', 'hasValidationErrors']);
@@ -218,14 +218,14 @@ describe('The Validator', function() {
 			innerModel[PROPNAME0] = value;
 			innerModel[PROPNAME1] = value;
 			model[PROPNAME0] = innerModel;
-			model[PROPNAME1] = { the_value: value };
+			model[PROPNAME1] = { the_value: value, a_date: A_DATE };
 
 			vctx.hasValidationErrors.and.callFake(function() {
 				return hasValidationErrors;
 			});
 
 			introspectionStrategy.enumerateProps.and.callFake(function(vc, o, t, cb) {
-				var ret;
+				var ret, ownPropNames, i;
 
 				if( o === model ) {
 					hasValidationErrors = false;
@@ -240,10 +240,10 @@ describe('The Validator', function() {
 					if( ret !== false ) ret = cb(PROPNAME1);
 				}
 				else {
-					for( var x in o ) {
-						if( !o.hasOwnProperty(x) ) continue;
+					ownPropNames = Object.getOwnPropertyNames(o).sort();
+					for( i=0; i < ownPropNames.length; i++ ) {
 						hasValidationErrors = false;
-						ret = cb(x);
+						ret = cb(ownPropNames[i]);
 						if( ret === false ) {
 							break;
 						}
@@ -260,15 +260,16 @@ describe('The Validator', function() {
 			});
 		}
 
-		it('recurses for the properties of the model', function() {
+		it('recurses for the properties of the model, but does not descend into dates', function() {
 			createComplexFixture();
 			v.validateProperties(vctx, model, TYPE, false);
-			expect(introspectionStrategy.evaluate.calls.count()).toBe(5);
+			expect(introspectionStrategy.evaluate.calls.count()).toBe(6);
 			expect(introspectionStrategy.evaluate.calls.argsFor(0)).toEqual([model, PROPNAME0, TYPE, vctx]);
 			expect(introspectionStrategy.evaluate.calls.argsFor(1)).toEqual([innerModel, PROPNAME0, undefined, vctx]);
 			expect(introspectionStrategy.evaluate.calls.argsFor(2)).toEqual([innerModel, PROPNAME1, undefined, vctx]);
 			expect(introspectionStrategy.evaluate.calls.argsFor(3)).toEqual([model, PROPNAME1, TYPE, vctx]);
-			expect(introspectionStrategy.evaluate.calls.argsFor(4)).toEqual([model[PROPNAME1], 'the_value', undefined, vctx]);
+			expect(introspectionStrategy.evaluate.calls.argsFor(4)).toEqual([model[PROPNAME1], 'a_date', undefined, vctx]);
+			expect(introspectionStrategy.evaluate.calls.argsFor(5)).toEqual([model[PROPNAME1], 'the_value', undefined, vctx]);
 		});
 
 		it('exits eagerly, if eager is true', function() {
@@ -277,6 +278,24 @@ describe('The Validator', function() {
 			expect(introspectionStrategy.evaluate.calls.count()).toBe(2);
 			expect(introspectionStrategy.evaluate.calls.argsFor(0)).toEqual([model, PROPNAME0, TYPE, vctx]);
 			expect(introspectionStrategy.evaluate.calls.argsFor(1)).toEqual([innerModel, PROPNAME0, undefined, vctx]);
+		});
+
+		it('does not descend into properties where introspectionStrategy.shouldDescend() returns false', function() {
+			var propNameArguments;
+			createComplexFixture();
+			introspectionStrategy.shouldDescend = jasmine.createSpy('shouldDescend');
+			introspectionStrategy.shouldDescend.and.callFake(function(model, propName) {
+				return propName !== 'a_date';
+			});
+			model[PROPNAME1].a_date = { not_a_date_this_time: 'to test shouldDescend()' };
+			v.validateProperties(vctx, model, TYPE, false);
+			expect(introspectionStrategy.evaluate.calls.count()).toBe(6);
+			propNameArguments = introspectionStrategy.evaluate.calls.allArgs().map(function(x) {
+				return x[1];
+			});
+			expect(propNameArguments.every(function(x) {
+				return x !== 'not_a_date_this_time';
+			})).toBe(true);
 		});
 	});
 
