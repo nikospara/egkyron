@@ -22,6 +22,7 @@ of the display logic.
 
 ### Changes
 
+- (2017/08/10) Incorporated the `condition` branch into master; it adds the `condition` constraint parameter to conditionally deactivate the validation
 - (2016/06/09) The [React example](src/examples/react/README.md) is in the master.
 
 ### Implementation state

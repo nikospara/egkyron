@@ -143,6 +143,26 @@ describe('The Validator', function() {
 			expect(failValidator.calls.count()).toBe(0);
 			expect(vctx.addResult.calls.allArgs()).toEqual([[true]]);
 		});
+
+		it('skips the validation if condition returns false', function() {
+			var v = new Validator(registry), condition, constraints = [['failValidator', { specialValue: 'XyZ' }], 'passValidator'], mostRecentCallData;
+
+			condition = jasmine.createSpy('condition');
+			condition.and.returnValue(false);
+			constraints[0][1].condition = condition;
+
+			v.evaluateConstraints(vctx, constraints, ctxObject, value);
+
+			expect(vctx.setCurrentConstraintName.calls.allArgs()).toEqual([['passValidator'], [null]]);
+			expect(failValidator).not.toHaveBeenCalled();
+			expect(condition.calls.count()).toBe(1);
+			mostRecentCallData = condition.calls.mostRecent();
+			expect(mostRecentCallData.object).toEqual(ctxObject);
+			expect(mostRecentCallData.args[0]).toEqual(value);
+			expect(mostRecentCallData.args[1]).toEqual(jasmine.objectContaining({ specialValue: 'XyZ' }));
+			expect(mostRecentCallData.args[2]).toBe(vctx);
+			expect(vctx.addResult.calls.allArgs()).toEqual([[true]]);
+		});
 	});
 
 	describe('validateProperties method', function() {

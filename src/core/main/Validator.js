@@ -142,6 +142,12 @@ Validator.prototype.evaluateConstraints = function(vctx, constraints, ctxObject,
 		constraints = this.normalizeConstraints(constraints);
 		for (i = 0; i < constraints.length; i++) {
 			constraint = constraints[i];
+			if( typeof(constraint.params.condition) === 'function' ) {
+				res = constraint.params.condition.call(ctxObject, value, constraint.params, vctx);
+				if( res === false ) {
+					continue;
+				}
+			}
 			if( inGroups(constraint, groups) ) {
 				vctx.setCurrentConstraintName(constraint.key);
 				res = constraint.validator.call(ctxObject, value, constraint.params, vctx);
