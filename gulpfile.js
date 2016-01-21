@@ -39,11 +39,16 @@ gulp.task('core.test', ['core.jshint', 'core.package.node'], function() {
 gulp.task('core.package.node', ['core.jshint'], function() {
 	var
 		tap = require('gulp-tap'),
-		affix = require('./src/build/gulp-affix.js');
+		affix = require('./src/build/gulp-affix.js'),
+		merge2 = require('merge2');
 
-	return gulp
-		.src('./src/core/main/**/*.js')
-		.pipe(tap(affix('./src/packaging/node/affixes/')))
+	return merge2(
+			gulp
+				.src('./src/core/main/**/*.js')
+				.pipe(tap(affix('./src/packaging/node/affixes/'))),
+			gulp
+				.src(['./package.json', './LICENSE', './README.md', './src/packaging/node/index.js'])
+		)
 		.pipe(gulp.dest('./target/dist/node'));
 });
 

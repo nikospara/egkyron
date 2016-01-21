@@ -83,3 +83,27 @@ npm install
 bower install
 gulp
 ```
+
+To clean, simply do:
+
+```shell
+rm -rf target
+```
+
+Installing to npm
+-----------------
+
+The directory that will get installed is `target/dist/node`; it contains all the
+things needed. So, after building, do:
+
+```shell
+cd target/dist/node
+npm publish
+```
+
+Alternatively, you may want to link for development purposes:
+
+```shell
+cd target/dist/node
+npm link
+`

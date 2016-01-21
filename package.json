@@ -12,7 +12,11 @@
 		"LICENSE",
 		"README.md",
 		"index.js",
-		"target/dist/node"
+		"Constraint.js",
+		"ValidationContext.js",
+		"ValidationResult.js",
+		"Validator.js",
+		"introspection-strategy"
 	],
 	"main": "index.js",
 	"repository": {
