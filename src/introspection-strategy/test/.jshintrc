@@ -7,6 +7,7 @@
 		"require": true,
 		"jasmine": true,
 		"it": true,
+		"fit": true,
 		"describe": true,
 		"beforeEach": true,
 		"afterEach": true,

@@ -3,7 +3,7 @@ Egkyron
 
 Egkyron is a validation infrasrtructure library, with the goal of being capable to adapt to
 various kinds of Javascript model objects, e.g. plain JSON, Knockout etc and environments,
-e.g. Node, Browser+AngularJS, Browser+Knockout etc.
+e.g. Node, Browser+AngularJS, Browser+React etc. The word *egkyron* means *valid* in Greek.
 
 Egkyron undertakes the task of model validation in addition to form validation. Form validation
 has already been implemented for the targeted frameworks, such as AngularJS. This means that,
@@ -106,4 +106,4 @@ Alternatively, you may want to link for development purposes:
 ```shell
 cd target/dist/node
 npm link
-`
+```

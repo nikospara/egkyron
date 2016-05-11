@@ -1,10 +1,11 @@
 describe('The ValidationContext', function() {
 	
-	var ValidationContext = require('../../../target/dist/node/ValidationContext'),
-		ValidationResult = require('../../../target/dist/node/ValidationResult');
+	var ValidationContext = require('../../../target/dist/node/ValidationContext');
+	var ValidationResult = require('../../../target/dist/node/ValidationResult');
+	var vctx;
 
-	it('should construct the correct results', function() {
-		var vctx = new ValidationContext();
+	beforeEach(function() {
+		vctx = new ValidationContext();
 		vctx.pushPath('name');
 		vctx.popPath();
 		vctx.pushPath('address');
@@ -24,7 +25,9 @@ describe('The ValidationContext', function() {
 		vctx.popPath();
 		vctx.popPath();
 		vctx.popPath();
+	});
 
+	it('should construct the correct results', function() {
 		expect(vctx.result).toEqual({
 			_thisValid: true,
 			_childrenValid: false,
@@ -76,6 +79,23 @@ describe('The ValidationContext', function() {
 					]
 				}
 			}
+		});
+	});
+
+	describe('hasValidationErrors method', function() {
+		it('reports the correct value for this object', function() {
+			expect(vctx.hasValidationErrors()).toBe(true);
+			vctx.result._childrenValid = true;
+			expect(vctx.hasValidationErrors()).toBe(false);
+		});
+
+		it('reports the correct value for a path validation result', function() {
+			expect(vctx.hasValidationErrors({_thisValid: false})).toBe(true);
+			expect(vctx.hasValidationErrors({_thisValid: true})).toBe(false);
+			expect(vctx.hasValidationErrors({_thisValid: false, _childrenValid: true})).toBe(true);
+			expect(vctx.hasValidationErrors({_thisValid: false, _childrenValid: false})).toBe(true);
+			expect(vctx.hasValidationErrors({_thisValid: true, _childrenValid: false})).toBe(true);
+			expect(vctx.hasValidationErrors({_thisValid: true, _childrenValid: true})).toBe(false);
 		});
 	});
 });

@@ -147,12 +147,14 @@ gulp.task('envadaptor.package.angular', function() {
 });
 
 gulp.task('envadaptor.test', ['envadaptor.jshint', 'envadaptor.test.jshint', 'envadaptor.package.angular', 'core.package.angular'], function(done) {
-	var karma = require('karma').server;
+	var KarmaServer = require('karma').Server;
 
-	karma.start({
+	var server = new KarmaServer({
 		configFile: __dirname + '/src/environment-adaptor/angular/karma.conf.js',
 		singleRun: true
 	}, done);
+
+	server.start();
 });
 
 
