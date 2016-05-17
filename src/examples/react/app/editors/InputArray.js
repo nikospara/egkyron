@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { attachInput } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
 import Button from 'react-bootstrap/lib/Button';
 
 export default class InputArray extends Component {
@@ -48,6 +48,10 @@ export default class InputArray extends Component {
 				<Button bsStyle="danger" bsSize="xsmall" onClick={() => this.removeItem(item)}><span className="glyphicon glyphicon-remove" title="Remove"></span></Button>
 			</div>
 		);
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {

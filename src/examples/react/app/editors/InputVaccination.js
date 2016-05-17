@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Vaccination from 'model/Vaccination';
 import InputText from 'controls/InputText';
-import { attachInput } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 
@@ -20,6 +20,10 @@ export default class InputVaccination extends Component {
 			value: newValue
 		});
 		this.props.onChange && this.props.onChange(newValue);
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {

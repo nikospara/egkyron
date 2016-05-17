@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { makeMessages } from 'controls/utils';
+import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
 
 export default class InputText extends Component {
 	constructor(props) {
@@ -19,6 +19,10 @@ export default class InputText extends Component {
 
 	handleChange(event) {
 		this.props.onChange && this.props.onChange(event.target.value);
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {

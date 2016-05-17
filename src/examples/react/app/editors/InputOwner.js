@@ -5,7 +5,7 @@ import InputText from 'controls/InputText';
 import InputAddress from './InputAddress';
 import InputArray from './InputArray';
 import InputPet from './InputPet';
-import { attachInput } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import uuid from 'uuid';
@@ -29,6 +29,10 @@ export default class InputOwner extends Component {
 
 	addPet() {
 		return new Pet({id: uuid.v4()});
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {

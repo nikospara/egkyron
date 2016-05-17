@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Address from 'model/Address';
 import InputText from 'controls/InputText';
-import { attachInput } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
 
 export default class InputAddress extends Component {
 	constructor(props) {
@@ -18,6 +18,10 @@ export default class InputAddress extends Component {
 			value: newValue
 		});
 		this.props.onChange && this.props.onChange(newValue);
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {

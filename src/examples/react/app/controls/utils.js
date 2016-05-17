@@ -1,4 +1,5 @@
 import React from 'react';
+import ValidationContext from 'egkyron/ValidationContext';
 
 export function attachInput(component, fieldName) {
 	return {
@@ -14,4 +15,15 @@ export function makeMessages(component) {
 		.filter(m => m[1].isValid === false)
 		.map(m => <span className="help-block" key={m[0]}>{m[0]}</span>)
 	;
+}
+
+export function isTotallyValid(props) {
+	return props.validity == null || !ValidationContext.prototype.hasValidationErrors(props.validity);
+}
+
+export function simpleShouldComponentUpdate(nextProps, nextState) {
+	if( this.state.value === nextState.value && isTotallyValid(this.props) && isTotallyValid(nextProps) ) {
+		return false;
+	}
+	return true;
 }

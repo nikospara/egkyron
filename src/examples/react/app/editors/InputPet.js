@@ -5,7 +5,7 @@ import InputText from 'controls/InputText';
 import InputGender from './InputGender';
 import InputArray from './InputArray';
 import InputVaccination from './InputVaccination';
-import { attachInput } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import uuid from 'uuid';
@@ -34,6 +34,10 @@ export default class InputPet extends Component {
 
 	addVaccination() {
 		return new Vaccination({id: uuid.v4()});
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {

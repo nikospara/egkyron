@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { makeMessages } from 'controls/utils';
+import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
 
 export default class InputGender extends Component {
 	constructor(props) {
@@ -25,6 +25,10 @@ export default class InputGender extends Component {
 			<option key=""></option>,
 			...this.props.options.map(o => <option value={o.id} key={o.id}>{o.label}</option>)
 		];
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {
