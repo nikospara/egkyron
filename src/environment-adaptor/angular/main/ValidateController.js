@@ -115,7 +115,7 @@ angular.module('egkyron').controller('ValidateController', ['$scope', '$attrs', 
 
 	function evaluateConstraints(value, eager) {
 		var
-			validationContext = new ValidationContext(),
+			validationContext = new ValidationContext(value),
 			validationArgs;
 
 		validationArgs = validator.introspectionStrategy.prepareValidationFromScope($scope, processedModelExpression, controller.getType());

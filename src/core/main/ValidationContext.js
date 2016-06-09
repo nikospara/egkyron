@@ -5,8 +5,10 @@
  * as the validation result. It is meant to be used for a single validation.
  *
  * @constructor
+ *
+ * @param {*} root - The root object being validated.
  */
-function ValidationContext() {
+function ValidationContext(root) {
 	/**
 	 * The name of the constraint being validated, it may be useful for debugging and for the validator.
 	 * @member {string}
@@ -107,6 +109,12 @@ function ValidationContext() {
 	 * @member {Object[]}
 	 */
 	this.path = [this.result];
+	/**
+	 * Keep the model objects up to the current property.
+	 * @member {ValidationPathEntry[]}
+	 * @private
+	 */
+	this._modelPath = [{ path: '', value: root }];
 }
 
 /**
@@ -163,8 +171,9 @@ ValidationContext.prototype.setMessageParams = function(params) {
  * Called when entering a property of an object to mark the path.
  *
  * @param {string} path - Name of the property just entered.
+ * @param {*} value - Value of the property just entered.
  */
-ValidationContext.prototype.pushPath = function(path) {
+ValidationContext.prototype.pushPath = function(path, value) {
 	var curPath = this.path[this.path.length-1], newPath = { _thisValid: true, _validity: null, _children: null };
 	if( !curPath._children ) {
 		curPath._children = (typeof(path) === 'number' ? [] : {});
@@ -174,6 +183,7 @@ ValidationContext.prototype.pushPath = function(path) {
 	}
 	curPath._children[path] = newPath;
 	this.path.push(newPath);
+	this._modelPath.push({ path: path, value: value });
 };
 
 /**
@@ -181,6 +191,7 @@ ValidationContext.prototype.pushPath = function(path) {
  */
 ValidationContext.prototype.popPath = function() {
 	this.path.pop();
+	this._modelPath.pop();
 };
 
 /**
@@ -198,3 +209,53 @@ ValidationContext.prototype.hasValidationErrors = function(arg) {
 		return false;
 	}
 };
+
+/**
+ * Access the property names and values of the path.
+ *
+ * @param {number} [index] - The order of the path to get, <code>0</code> is the current path, <code>1</code> is the parent and so on.
+ * @returns {ValidationPathEntry}
+ */
+ValidationContext.prototype.getModelPath = function(index) {
+	var actualIndex = typeof index === 'number' ? index : 0;
+	if( actualIndex < 0 ) {
+		throw new Error('index should be positive - was: ' + index);
+	}
+	if( actualIndex > this._modelPath.length - 1 ) {
+		throw new Error('index (' + index + ') should not exceed the depth of the model tree (' + this._modelPath.length + ')');
+	}
+	return this._modelPath[this._modelPath.length - actualIndex - 1];
+};
+
+/**
+ * Access the parent nodes of the model node being validated.
+ * This is a conveniency method and delegates to <code>getModelPath(index + 1)</code>.
+ *
+ * @param {number} [index] - The order of the parent to get, <code>0</code> (or falsey) is the parent, <code>1</code> is the grandparent and so on.
+ * @returns {ValidationPathEntry}
+ */
+ValidationContext.prototype.getParent = function(index) {
+	var actualIndex = typeof index === 'number' ? index : 0;
+	return this.getModelPath(actualIndex + 1);
+};
+
+
+
+/**
+ * Descriptor for a piece of the validation path.
+ *
+ * @class ValidationPathEntry
+ */
+/**
+ * The name (if it is an object property) or index (if the parent is an array)
+ * of this path entry.
+ *
+ * @var {string|number} path
+ * @memberof ValidationPathEntry.prototype
+ */
+/**
+ * The value of this path entry.
+ *
+ * @var {*} value
+ * @memberof ValidationPathEntry.prototype
+ */

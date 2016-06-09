@@ -40,7 +40,7 @@ Validator.DEFAULT_GROUPS = ['default'];
  * @returns {ValidationContext}
  */
 Validator.prototype.validate = function(model, eager, groups) {
-	var props, vctx = new ValidationContext(), nparams = 3, calculatedEager = eager, calculatedGroups = groups;
+	var props, vctx = new ValidationContext(model), nparams = 3, calculatedEager = eager, calculatedGroups = groups;
 	if( model != null ) {
 		if( Array.isArray(calculatedEager) ) {
 			calculatedGroups = calculatedEager;
@@ -82,7 +82,7 @@ Validator.prototype.validateProperties = function(vctx, model, type, eager, grou
 		if( props == null || props.indexOf(propName) >= 0 ) {
 			constraints = self.introspectionStrategy.extractConstraintsFromContext(vctx, model, type, propName);
 			propValue = self.introspectionStrategy.evaluate(model, propName, type, vctx);
-			vctx.pushPath(propName);
+			vctx.pushPath(propName, propValue);
 			self.evaluateConstraints(vctx, constraints, model, propValue, eager, groups);
 			if( (!eager || !vctx.hasValidationErrors()) && (propValue != null && typeof(propValue) === 'object') ) {
 				if( !(propValue instanceof Date) && (typeof(self.introspectionStrategy.shouldDescend) !== 'function' || self.introspectionStrategy.shouldDescend(model, propName, type, vctx)) ) {

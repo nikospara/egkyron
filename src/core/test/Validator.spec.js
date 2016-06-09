@@ -146,7 +146,14 @@ describe('The Validator', function() {
 	});
 
 	describe('validateProperties method', function() {
-		var vctx, introspectionStrategy, v, model = {}, TYPE = 'THE_TYPE', PROPNAME0 = 'PROPNAME0', PROPNAME1 = 'PROPNAME1', value = 'THE VALUE', A_DATE = new Date(), hasValidationErrors = false, innerModel;
+		var vctx, introspectionStrategy, v, model = {}, innerModel;
+		var TYPE = 'THE_TYPE';
+		var PROPNAME0 = 'PROPNAME0';
+		var PROPNAME1 = 'PROPNAME1';
+		var value = 'THE VALUE';
+		var A_DATE = new Date();
+		var A_VALUE = { x: 5, id: 'ABC' };
+		var hasValidationErrors = false;
 
 		beforeEach(function() {
 			vctx = jasmine.createSpyObj('vctx', ['pushPath', 'popPath', 'hasValidationErrors']);
@@ -183,6 +190,7 @@ describe('The Validator', function() {
 			beforeEach(function() {
 				vctx = jasmine.createSpyObj('vctx', ['pushPath', 'popPath', 'hasValidationErrors']);
 				introspectionStrategy = jasmine.createSpyObj('introspectionStrategy', ['extractConstraintsFromContext', 'enumerateProps', 'evaluate', 'findType']);
+				introspectionStrategy.evaluate.and.returnValue(A_VALUE);
 				v = new Validator(registry, introspectionStrategy);
 
 				v.validateProperties(vctx, model, TYPE);
@@ -191,7 +199,7 @@ describe('The Validator', function() {
 
 			it('manages the validation path correctly', function() {
 				callback(PROPNAME0);
-				expect(vctx.pushPath.calls.mostRecent().args).toEqual([PROPNAME0]);
+				expect(vctx.pushPath.calls.mostRecent().args).toEqual([PROPNAME0, A_VALUE]);
 				expect(vctx.pushPath.calls.count()).toBe(1);
 				expect(vctx.popPath.calls.count()).toBe(1);
 			});

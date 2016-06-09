@@ -98,4 +98,48 @@ describe('The ValidationContext', function() {
 			expect(vctx.hasValidationErrors({_thisValid: true, _childrenValid: true})).toBe(false);
 		});
 	});
+
+	describe('getModelPath/getParent methods', function() {
+		var model;
+
+		beforeEach(function() {
+			model = { name: 'Bob', address: { city: 'Bikini Bottom' }, friends: [{ name: 'Patrick', surname: 'Star' }, { name: 'Squidward', surname: 'Tentacles' } ] };
+			vctx = new ValidationContext(model);
+		});
+
+		it('retrieves the current node when called with 0 or no argument', function() {
+			vctx.pushPath('name', 'Bob');
+			expect(vctx.getModelPath()).toEqual({ path: 'name', value: model.name });
+			expect(vctx.getModelPath(0)).toEqual({ path: 'name', value: model.name });
+		});
+
+		it('retrieves the parent node when called with index > 0', function() {
+			vctx.pushPath('friends', model.friends);
+			vctx.pushPath(0, model.friends[0]);
+			vctx.pushPath('name', 'Patrick');
+
+			expect(vctx.getModelPath(1)).toEqual({ path: 0, value: { name: 'Patrick', surname: 'Star' } });
+			expect(vctx.getParent()).toEqual({ path: 0, value: { name: 'Patrick', surname: 'Star' } });
+			expect(vctx.getParent(0)).toEqual({ path: 0, value: { name: 'Patrick', surname: 'Star' } });
+
+			expect(vctx.getModelPath(2)).toEqual({ path: 'friends', value: model.friends });
+			expect(vctx.getParent(1)).toEqual({ path: 'friends', value: model.friends });
+		});
+
+		it('throws for negative index', function() {
+			expect(function() {
+				vctx.getModelPath(-1);
+			}).toThrow();
+		});
+
+		it('throws for index greater than the current model depth - 1', function() {
+			vctx.pushPath('name', 'Bob');
+			expect(function() {
+				vctx.getModelPath(1);
+			}).not.toThrow();
+			expect(function() {
+				vctx.getModelPath(2);
+			}).toThrow();
+		});
+	});
 });
