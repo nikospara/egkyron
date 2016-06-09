@@ -16,11 +16,14 @@ export default class OwnerView extends Component {
 
 	_makeState(props) {
 		var validator, value;
+		// create an Egkyron Validator
 		validator = new Validator(makeValidatorRegistry(), new ConstructorIntrospector());
 		value = new Owner();
 		return {
-			validator,
 			value,
+			// keep the validator in our state...
+			validator,
+			// and calculate the initial validation state
 			validity: validator.validate(value).result
 		};
 	}
@@ -29,6 +32,7 @@ export default class OwnerView extends Component {
 console.log('new model: ', value);
 		this.setState({
 			value,
+			// when the model changes, update the validity state
 			validity: this.state.validator.validate(value).result
 		});
 	}

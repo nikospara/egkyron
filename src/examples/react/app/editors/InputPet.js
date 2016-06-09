@@ -45,16 +45,16 @@ export default class InputPet extends Component {
 			<Row componentClass="fieldset">
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
 				<Col sm={5}>
-					<InputText   label="Name"   {...attachInput(this, 'name')} />
+					<InputText   label="Name"         {...attachInput(this, 'name')} />
 				</Col>
 				<Col sm={5}>
-					<InputText   label="Type"   {...attachInput(this, 'type')} />
+					<InputText   label="Type"         {...attachInput(this, 'type')} />
 				</Col>
 				<Col sm={2}>
-					<InputGender label="Gender" {...attachInput(this, 'gender')} options={GENDER_OPTIONS} />
+					<InputGender label="Gender"       {...attachInput(this, 'gender')} options={GENDER_OPTIONS} />
 				</Col>
 				<Col sm={12}>
-					<InputArray label="Vaccinations" {...attachInput(this, 'vaccinations')} innerComponent={InputVaccination} add={this.addVaccination.bind(this)} addLabel="Add vaccination" />
+					<InputArray  label="Vaccinations" {...attachInput(this, 'vaccinations')} innerComponent={InputVaccination} add={this.addVaccination.bind(this)} addLabel="Add vaccination" />
 				</Col>
 			</Row>
 		);

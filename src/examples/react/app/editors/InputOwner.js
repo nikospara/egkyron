@@ -46,14 +46,14 @@ export default class InputOwner extends Component {
 				<Col sm={6}>
 					<fieldset>
 						<legend>Personal data</legend>
-						<InputText    label="Name"    {...attachInput(this, 'name')} />
+						<InputText label="Name" {...attachInput(this, 'name')} />
 					</fieldset>
 				</Col>
 				<Col sm={6}>
 					<InputAddress label="Address" {...attachInput(this, 'address')} />
 				</Col>
 				<Col sm={12}>
-					<InputArray   label="Pets"    {...attachInput(this, 'pets')} innerComponent={InputPet} add={this.addPet.bind(this)} addLabel="Add pet" />
+					<InputArray label="Pets" {...attachInput(this, 'pets')} innerComponent={InputPet} add={this.addPet.bind(this)} addLabel="Add pet" />
 				</Col>
 			</Row>
 		);

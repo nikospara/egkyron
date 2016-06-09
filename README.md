@@ -20,9 +20,13 @@ of the display logic.
 
 [Here](http://plnkr.co/edit/PiOuMT) is a plunk version of the [Angular example](https://github.com/nikospara/egkyron/tree/master/src/examples/angular).
 
+### Changes
+
+- (2016/06/09) The [React example](src/examples/react/README.md) is in the master.
+
 ### Implementation state
 
-Currently the core has been implemented, as well as Node and AngularJS integration.
+Currently the core has been implemented, as well as Node and AngularJS integration. An example in React is also added, using the NPM package directly. Integration with React for this example is so simple, that no separate packaging project was made.
 
 Use cases - what was it made for
 --------------------------------
