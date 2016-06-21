@@ -1,0 +1,17 @@
+{
+	"name": "validation-example-angular",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"egkyron": "*"
+	},
+	"devDependencies": {
+		"gulp": "*",
+		"gulp-jshint": "*",
+		"jshint-stylish": "*",
+		"gulp-tap": "*",
+		"express": "*",
+		"body-parser": "*",
+		"bower": "*"
+	}
+}

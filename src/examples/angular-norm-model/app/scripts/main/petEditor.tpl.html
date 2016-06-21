@@ -1,0 +1,30 @@
+<div class="row">
+	<div class="col-xs-4 form-group" validity-coordinator>
+		<label for="petname{{ctrl.index}}">Pet name</label>
+		<input validate ng-model="ctrl.pet.name" type="text" class="form-control" id="petname{{ctrl.index}}" />
+	<validity-indicator></validity-indicator>
+	</div>
+	<div class="col-xs-4 form-group">
+		<label for="type{{ctrl.index}}">Type</label>
+		<input ng-model="ctrl.pet.type" type="text" class="form-control" id="type{{ctrl.index}}" />
+	</div>
+	<div class="col-xs-4 form-group">
+		<label for="gender{{ctrl.index}}">Gender</label>
+		<div class="input-group">
+			<select ng-model="ctrl.pet.gender" ng-options="g.code as g.display for g in ctrl.genders" id="gender{{ctrl.index}}" class="form-control">
+				<option value=""></option>
+			</select>
+			<span class="input-group-btn">
+				<button class="btn btn-primary" type="button" ng-click="ctrl.addItem()">+</button>
+				<button class="btn btn-danger" type="button" ng-click="ctrl.removeItem()">-</button>
+			</span>
+		</div>
+	</div>
+	
+	<div class="col-xs-12">
+		<panel-collection-editor ng-model="ctrl.pet.vaccinations" var-name="item" add-item="ctrl.addVaccination(index)" remove-item="ctrl.removeVaccination(item)">
+			<header><h4>Vaccinations</h4></header>
+			<vaccination-editor ng-model="item" index="$index" remove-item="removeItem({item:item})"></vaccination-editor>
+		</panel-collection-editor>
+	</div>
+</div>

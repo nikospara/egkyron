@@ -1,0 +1,15 @@
+<div class="row">
+	<div class="col-xs-6 form-group">
+		<label for="vacctype{{ctrl.index}}">Type</label>
+		<input validate ng-model="ctrl.vaccination.type" type="text" class="form-control" id="vacctype{{ctrl.index}}" />
+	</div>
+	<div class="col-xs-6 form-group">
+		<label for="vaccdate{{ctrl.index}}">Date</label>
+		<div class="input-group">
+			<input validate ng-model="ctrl.vaccination.date" type="text" class="form-control" id="vaccdate{{ctrl.index}}" />
+			<span class="input-group-btn">
+				<button class="btn btn-danger" type="button" ng-click="ctrl.removeItem()">-</button>
+			</span>
+		</div>
+	</div>
+</div>
