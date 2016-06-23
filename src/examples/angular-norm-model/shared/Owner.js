@@ -1,5 +1,6 @@
 function Owner(json) {
 	if( !(this instanceof Owner) ) return new Owner(json);
+	this.key = json && json.key || null;
 	this.name = json && json.name || null;
 	this.pets = json && json.pets ? json.pets.map(Pet) : [];
 }

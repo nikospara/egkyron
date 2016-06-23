@@ -1,0 +1,59 @@
+<!doctype HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Angular example - External Rules and Normalized Model Introspector</title>
+		<link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+		<link href="css/style.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="container" ng-app="app" ng-controller="MainCtrl as main">
+			<form name="ownerForm" ng-model-options="{allowInvalid: true}" validator="main.validator" autocomplete="off" novalidate="novalidate">
+				<owner-editor ng-model="main.model.owner"></owner-editor>
+			</form>
+
+			<button class="btn btn-default" ng-click="main.validateInServer()">Validate in server</button>
+			<button class="btn btn-default" ng-click="main.validateInClient()">Validate in client</button>
+			<button class="btn btn-default" ng-click="main.showStore()">Show store</button>
+
+			<!--
+			<pre>{{ main.model | json }}</pre>
+			-->
+		</div>
+
+		<script src="angular/angular.js"></script>
+		<script src="angular-animate/angular-animate.js"></script>
+		<script src="angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<script src="scripts/app.module.js"></script>
+		<script src="egkyron-core-angular/egkyron-core.js"></script>
+		<script src="scripts/common/common.module.js"></script>
+		<script src="scripts/main/validation/validation.module.js"></script>
+
+		<script src="shared/Owner.js"></script>
+		<script src="shared/Pet.js"></script>
+		<script src="shared/Vaccination.js"></script>
+		<script src="shared/makeValidatorRegistry.js"></script>
+		<script src="shared/makeRules.js"></script>
+
+		<script src="dist/angular/introspection-strategy/BaseJsonIntrospector.js"></script>
+		<script src="dist/angular/introspection-strategy/ExternalConstraintsIntrospector.js"></script>
+
+		<script src="scripts/main/validation/validatorFactory-ext.js"></script>
+		<script src="scripts/main/validation/validate.js"></script>
+		<script src="scripts/main/validation/validityCoordinator.js"></script>
+		<script src="scripts/main/validation/validityIndicator.js"></script>
+
+		<script src="scripts/main/MainCtrl.js"></script>
+		<script src="scripts/main/ownerEditor.js"></script>
+		<script src="scripts/main/petEditor.js"></script>
+		<script src="scripts/main/vaccinationEditor.js"></script>
+		<script src="scripts/main/store.js"></script>
+		<script src="scripts/main/AngularIntrospector-norm.js"></script>
+		<script src="scripts/main/jsonResultModal/JsonResultModalCtrl.js"></script>
+
+		<script src="scripts/common/panelCollectionEditor.js"></script>
+		<script src="scripts/common/domUtils.js"></script>
+	</body>
+</html>

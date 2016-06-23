@@ -1,5 +1,6 @@
 function Pet(json) {
 	if( !(this instanceof Pet) ) return new Pet(json);
+	this.key = json && json.key || null;
 	this.name = json && json.name || null;
 	this.type = json && json.type || null;
 	this.gender = json && json.gender || null;
