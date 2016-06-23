@@ -5,5 +5,5 @@
 </div>
 <panel-collection-editor validate ng-model="ctrl.owner.pets" var-name="item" add-item="ctrl.addPet(index)" remove-item="ctrl.removePet(item)">
 	<header><h3>Pets</h3></header>
-	<pet-editor ng-model="item" index="$index" add-item="addItem({index:$index+1})" remove-item="removeItem({item:item})"></pet-editor>
+	<pet-editor ng-model="ctrl.pets[item]" index="$index" add-item="addItem({index:$index+1})" remove-item="removeItem({item:item})"></pet-editor>
 </panel-collection-editor>

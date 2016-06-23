@@ -1,8 +1,10 @@
-angular.module('app').directive('petEditor', ['Vaccination', function(Vaccination) {
+angular.module('app').directive('petEditor', ['Vaccination', 'store', function(Vaccination, store) {
 	var GENDERS = [
 		{ code: 'M', display: 'Male' },
 		{ code: 'F', display: 'Female' }
 	];
+
+	var EMPTY_MAP = {};
 
 	return {
 		restrict: 'E',
@@ -30,6 +32,12 @@ angular.module('app').directive('petEditor', ['Vaccination', function(Vaccinatio
 					this.pet.vaccinations.splice(index,1);
 				}
 			};
+
+			Object.defineProperty(this, 'vaccinations', {
+				get: function() {
+					return store.data['Vaccination'] || EMPTY_MAP;
+				}
+			});
 		},
 		require: ['petEditor', 'ngModel'],
 		link: function(scope, elem, attrs, ctrls) {

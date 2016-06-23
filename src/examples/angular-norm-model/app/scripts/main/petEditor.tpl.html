@@ -24,7 +24,7 @@
 	<div class="col-xs-12">
 		<panel-collection-editor ng-model="ctrl.pet.vaccinations" var-name="item" add-item="ctrl.addVaccination(index)" remove-item="ctrl.removeVaccination(item)">
 			<header><h4>Vaccinations</h4></header>
-			<vaccination-editor ng-model="item" index="$index" remove-item="removeItem({item:item})"></vaccination-editor>
+			<vaccination-editor ng-model="ctrl.vaccinations[item]" index="$index" remove-item="removeItem({item:item})"></vaccination-editor>
 		</panel-collection-editor>
 	</div>
 </div>

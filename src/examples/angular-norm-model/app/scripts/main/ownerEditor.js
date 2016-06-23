@@ -1,4 +1,6 @@
-angular.module('app').directive('ownerEditor', ['Pet', function(Pet) {
+angular.module('app').directive('ownerEditor', ['Pet', 'store', function(Pet, store) {
+	var EMPTY_MAP = {};
+
 	return {
 		restrict: 'E',
 		templateUrl: 'scripts/main/ownerEditor.tpl.html',
@@ -21,6 +23,12 @@ angular.module('app').directive('ownerEditor', ['Pet', function(Pet) {
 					this.owner.pets.splice(index, 1);
 				}
 			};
+
+			Object.defineProperty(this, 'pets', {
+				get: function() {
+					return store.data['Pet'] || EMPTY_MAP;
+				}
+			});
 		},
 		require: ['ownerEditor', 'ngModel'],
 		link: function(scope, elem, attrs, ctrls) {
