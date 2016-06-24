@@ -4,7 +4,7 @@ angular.module('app').directive('petEditor', ['Vaccination', 'store', function(V
 		{ code: 'F', display: 'Female' }
 	];
 
-	var EMPTY_MAP = {};
+	var EMPTY_MAP = Object.freeze({});
 
 	return {
 		restrict: 'E',
@@ -23,13 +23,17 @@ angular.module('app').directive('petEditor', ['Vaccination', 'store', function(V
 				if( !this.pet.vaccinations ) {
 					this.pet.vaccinations = [];
 				}
-				this.pet.vaccinations.push(new Vaccination());
+				var vaccination = new Vaccination({ key: uuid.v4() });
+				this.pet.vaccinations.push(vaccination.key);
+				(store.data['Vaccination'] = store.data['Vaccination'] || {})[vaccination.key] = vaccination;
 			};
 
 			this.removeVaccination = function(item) {
 				var index = this.pet.vaccinations.indexOf(item);
 				if( index >= 0 ) {
 					this.pet.vaccinations.splice(index,1);
+					// XXX This assumes that each vaccination is referenced only once!
+					delete store.data['Vaccination'][item];
 				}
 			};
 

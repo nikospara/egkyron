@@ -1,10 +1,7 @@
-angular.module('common').directive('panelCollectionEditor', ['$compile', 'domUtils', function($compile, domUtils) {
+angular.module('common').directive('panelCollectionEditor', ['$compile', '$parse', 'domUtils', function($compile, $parse, domUtils) {
 	return {
 		restrict: 'E',
-		scope: {
-			addItem: '&',
-			removeItem: '&'
-		},
+		scope: true,
 		require: ['ngModel', '?validate'],
 		compile: function(tElem) {
 			var header, editor;
@@ -30,7 +27,33 @@ angular.module('common').directive('panelCollectionEditor', ['$compile', 'domUti
 					}
 				},
 				post: function(scope, elem, attrs, ctrls) {
-					var ngModel = ctrls[0], defaultIsEmpty = ngModel.$isEmpty, unwatchViewValue, varName = attrs.varName || 'item';
+					var ngModel = ctrls[0], defaultIsEmpty = ngModel.$isEmpty, unwatchViewValue, varName = attrs.varName || 'item', addItem, removeItem;
+
+					addItem = $parse(attrs.addItem);
+					scope.addItem = function(o) {
+						// XXX This assumes that the parameter of addItem() is always called index
+						var prevIndex = scope.index;
+						scope.index = o.index;
+						try {
+							return addItem(scope);
+						}
+						finally {
+							scope.index = prevIndex;
+						}
+					};
+
+					removeItem = $parse(attrs.removeItem);
+					scope.removeItem = function(o) {
+						// XXX This assumes that the parameter of removeItem() is always called item (do not confuse this with the varName)
+						var prevItem = scope.item;
+						scope.item = o.item;
+						try {
+							return removeItem(scope);
+						}
+						finally {
+							scope.item = prevItem;
+						}
+					};
 
 					ngModel.$render = function() {
 						if( unwatchViewValue ) {

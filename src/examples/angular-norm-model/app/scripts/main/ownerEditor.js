@@ -1,5 +1,5 @@
 angular.module('app').directive('ownerEditor', ['Pet', 'store', function(Pet, store) {
-	var EMPTY_MAP = {};
+	var EMPTY_MAP = Object.freeze({});
 
 	return {
 		restrict: 'E',
@@ -13,7 +13,9 @@ angular.module('app').directive('ownerEditor', ['Pet', 'store', function(Pet, st
 				if( !this.owner.pets ) {
 					this.owner.pets = [];
 				}
-				this.owner.pets.splice(index, 0, new Pet());
+				var pet = new Pet({ key: uuid.v4() });
+				this.owner.pets.splice(index, 0, pet.key);
+				(store.data['Pet'] = store.data['Pet'] || {})[pet.key] = pet;
 			};
 
 			this.removePet = function(item) {
@@ -21,6 +23,8 @@ angular.module('app').directive('ownerEditor', ['Pet', 'store', function(Pet, st
 				var index = this.owner.pets.indexOf(item);
 				if( index >= 0 ) {
 					this.owner.pets.splice(index, 1);
+					// XXX This assumes that each pet is referenced only once!
+					delete store.data['Pet'][item];
 				}
 			};
 
