@@ -22,7 +22,8 @@ of the display logic.
 
 ### Changes
 
-- (2016/06/09) The [React example](src/examples/react/README.md) is in the master.
+- (2016/06/28) The [normalized model example in Angular](./src/examples/angular-norm-model/README.md) is in the master.
+- (2016/06/09) The [React example](./src/examples/react/README.md) is in the master.
 
 ### Implementation state
 
