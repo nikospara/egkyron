@@ -1,0 +1,6 @@
+
+	egkyron.Constraint = Constraint;
+	egkyron.ValidationContext = ValidationContext;
+	egkyron.ValidationResult = ValidationResult;
+	egkyron.Validator = Validator;
+})(egkyron || {});

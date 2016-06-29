@@ -1,7 +1,17 @@
 var gulp = require('gulp');
 
 
-gulp.task('default', ['core.test', 'core.package.angular', 'intstrat.test', 'intstrat.package.angular', 'envadaptor.test', 'envadaptor.package.angular', 'bower.angular']);
+gulp.task('default', [
+	'core.test',
+	'core.package.angular',
+	'core.package.browser',
+	'intstrat.test',
+	'intstrat.package.angular',
+	'intstrat.package.browser',
+	'envadaptor.test',
+	'envadaptor.package.angular',
+	'bower.angular'
+]);
 
 
 
@@ -63,6 +73,24 @@ gulp.task('core.package.angular', ['core.jshint'], function() {
 		.pipe(gulp.dest('./target/dist/angular'));
 });
 
+gulp.task('core.package.browser', ['core.jshint'], function() {
+	var concat = require('gulp-concat');
+	var uglify = require('gulp-uglify');
+	var rename = require('gulp-rename');
+	var tap = require('gulp-tap');
+	var affix = require('./src/build/gulp-affix.js');
+
+	return gulp
+		.src('./src/core/main/**/*.js')
+		.pipe(concat('egkyron-core.js'))
+		.pipe(tap(affix('./src/packaging/browser/affixes/')))
+		.pipe(gulp.dest('./target/dist/browser'))
+		.pipe(uglify())
+		.pipe(rename('egkyron-core.min.js'))
+		.pipe(gulp.dest('./target/dist/browser'))
+	;
+});
+
 
 
 gulp.task('intstrat.jshint', function() {
@@ -116,6 +144,24 @@ gulp.task('intstrat.package.angular', ['intstrat.jshint'], function() {
 		.src('./src/introspection-strategy/main/**/*.js')
 		.pipe(tap(affix('./src/packaging/angular/affixes/introspection-strategy/')))
 		.pipe(gulp.dest('./target/dist/angular/introspection-strategy'));
+});
+
+gulp.task('intstrat.package.browser', ['intstrat.jshint'], function() {
+	var concat = require('gulp-concat');
+	var uglify = require('gulp-uglify');
+	var rename = require('gulp-rename');
+	var tap = require('gulp-tap');
+	var affix = require('./src/build/gulp-affix.js');
+
+	return gulp
+		.src('./src/introspection-strategy/main/**/*.js')
+		.pipe(concat('egkyron-introspection-strategy.js'))
+		.pipe(tap(affix('./src/packaging/browser/affixes/introspection-strategy/')))
+		.pipe(gulp.dest('./target/dist/browser'))
+		.pipe(uglify())
+		.pipe(rename('egkyron-introspection-strategy.min.js'))
+		.pipe(gulp.dest('./target/dist/browser'))
+	;
 });
 
 

@@ -1,0 +1,5 @@
+
+	egkyron.BaseJsonIntrospector = BaseJsonIntrospector;
+	egkyron.ConstructorIntrospector = ConstructorIntrospector;
+	egkyron.ExternalConstraintsIntrospector = ExternalConstraintsIntrospector;
+})(egkyron || {});
