@@ -1,9 +1,22 @@
-<div class="form-group" validity-coordinator>
-	<label for="name">Name</label>
-	<input validate ng-model="ctrl.owner.name" type="text" class="form-control" id="name" />
-	<validity-indicator></validity-indicator>
-</div>
-<panel-collection-editor validate ng-model="ctrl.owner.pets" var-name="item" add-item="ctrl.addPet(index)" remove-item="ctrl.removePet(item)">
-	<header><h3>Pets</h3></header>
-	<pet-editor ng-model="item" index="$index" add-item="addItem({index:$index+1})" remove-item="removeItem({item:item})"></pet-editor>
-</panel-collection-editor>
+<fieldset class="row">
+	<div ng-if="ctrl.label" class="col-xs-12">
+		<legend>{{ ctrl.label }}</legend>
+	</div>
+	<fieldset class="col-sm-6">
+		<legend>Personal data</legend>
+		<div class="form-group" validity-coordinator>
+			<label for="name">Name</label>
+			<input validate ng-model="ctrl.owner.name" type="text" class="form-control" id="name" />
+			<validity-indicator></validity-indicator>
+		</div>
+	</fieldset>
+	<fieldset class="col-sm-6">
+		<address-editor label="Address" validate ng-model="ctrl.owner.address"></address-editor>
+	</fieldset>
+	<div class="col-xs-12">
+		<panel-collection-editor validate ng-model="ctrl.owner.pets" var-name="item" add-item="ctrl.addPet(index)" remove-item="ctrl.removePet(item)">
+			<header><h3>Pets</h3></header>
+			<pet-editor ng-model="item" index="$index" add-item="addItem({index:$index+1})" remove-item="removeItem({item:item})"></pet-editor>
+		</panel-collection-editor>
+	</div>
+</fieldset>

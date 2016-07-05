@@ -6,9 +6,15 @@ function makeRules() {
 				'nospaces',
 				['length', {min: 2, max: 20}]
 			],
+			address: {
+				type: 'Address'
+			},
 			pets: {
 				type: 'Pet[]'
 			}
+		},
+		'Address': {
+			number: ['nospaces']
 		},
 		'Pet': {
 			name: [

@@ -5,6 +5,10 @@ This example demonstrates the usage of Egkyron with AngularJS in the client and 
 
 [Here](http://plnkr.co/edit/PiOuMT) is a plunk version of this example.
 
+### Changes
+
+- (2016/07/13) Added the `address` field to the `Owner` class to demonstrate an object editor used directly.
+
 ### Running
 
 The example is encapsulated in a Gulp script. Egkyron must have been built before running this example. Run `npm install` and `bower install` and then run `gulp` (running `gulp` also starts the server).

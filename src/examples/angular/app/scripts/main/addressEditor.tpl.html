@@ -1,0 +1,15 @@
+<fieldset class="row">
+	<div ng-if="ctrl.label" class="col-xs-12">
+		<legend>{{ ctrl.label }}</legend>
+	</div>
+	<div class="form-group col-xs-12" validity-coordinator>
+		<label for="street">Street</label>
+		<input validate ng-model="ctrl.address.street" type="text" class="form-control" id="street" />
+		<validity-indicator></validity-indicator>
+	</div>
+	<div class="form-group col-xs-12" validity-coordinator>
+		<label for="number">Number</label>
+		<input validate ng-model="ctrl.address.number" type="text" class="form-control" id="number" />
+		<validity-indicator></validity-indicator>
+	</div>
+</fieldset>

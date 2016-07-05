@@ -2,7 +2,9 @@ angular.module('app').directive('ownerEditor', ['Pet', function(Pet) {
 	return {
 		restrict: 'E',
 		templateUrl: 'scripts/main/ownerEditor.tpl.html',
-		scope: {},
+		scope: {
+			label: '@'
+		},
 		bindToController: true,
 		controllerAs: 'ctrl',
 		controller: function() {
