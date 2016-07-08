@@ -149,10 +149,20 @@ gulp.task('envadaptor.package.angular', function() {
 gulp.task('envadaptor.test', ['envadaptor.jshint', 'envadaptor.test.jshint', 'envadaptor.package.angular', 'core.package.angular'], function(done) {
 	var KarmaServer = require('karma').Server;
 
-	var server = new KarmaServer({
-		configFile: __dirname + '/src/environment-adaptor/angular/karma.conf.js',
-		singleRun: true
-	}, done);
+	var server = new KarmaServer(
+		{
+			configFile: __dirname + '/src/environment-adaptor/angular/karma.conf.js',
+			singleRun: true
+		},
+		function(result) {
+			// see https://github.com/karma-runner/gulp-karma/issues/30
+			// thanks to Charis Kalligeros
+			if( result > 0 ) {
+				return done(new Error('Karma exited with status code ' + result));
+			}
+			done();
+		}
+	);
 
 	server.start();
 });
