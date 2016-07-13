@@ -142,4 +142,54 @@ describe('The ValidationContext', function() {
 			}).toThrow();
 		});
 	});
+
+	describe('prependParentPath method', function() {
+		var model;
+
+		beforeEach(function() {
+			model = { name: 'Bob' };
+			vctx = new ValidationContext(model);
+		});
+
+		it('adds ValidationPathEntry objects at the front of the model path', function() {
+			vctx.prependParentPath({id: 'parent 1'}, 'p1');
+			vctx.prependParentPath({id: 'parent 2'});
+			vctx.prependParentPath({id: 'parent 3'}, 'p3');
+			expect(vctx.getParent()).toEqual({ path: 'p1',  value: {id: 'parent 1'} });
+			expect(vctx.getParent(1)).toEqual({ path: '',   value: {id: 'parent 2'} });
+			expect(vctx.getParent(2)).toEqual({ path: 'p3', value: {id: 'parent 3'} });
+		});
+	});
+
+	describe('appendParentPath method', function() {
+		var model;
+
+		beforeEach(function() {
+			model = { name: 'Bob' };
+			vctx = new ValidationContext(model);
+		});
+
+		it('adds ValidationPathEntry objects before the root object in the model path', function() {
+			vctx.appendParentPath({id: 'parent 1'}, 'p1');
+			vctx.appendParentPath({id: 'parent 2'});
+			vctx.appendParentPath({id: 'parent 3'}, 'p3');
+			expect(vctx.getParent()).toEqual({ path: 'p3',  value: {id: 'parent 3'} });
+			expect(vctx.getParent(1)).toEqual({ path: '',   value: {id: 'parent 2'} });
+			expect(vctx.getParent(2)).toEqual({ path: 'p1', value: {id: 'parent 1'} });
+		});
+	});
+
+	it('appendParentPath and prependParentPath methods work well together', function() {
+		var model = { name: 'Bob' };
+		vctx = new ValidationContext(model);
+		vctx.prependParentPath({id: 'parent 1'}, 'p1');
+		vctx.appendParentPath({id: 'parent 2'});
+		vctx.prependParentPath({id: 'parent 3'}, 'p3');
+		vctx.appendParentPath({id: 'parent 4'});
+		// mode path should be [3 1 2 4 root]
+		expect(vctx.getParent()).toEqual({ path: '',    value: {id: 'parent 4'} });
+		expect(vctx.getParent(1)).toEqual({ path: '',   value: {id: 'parent 2'} });
+		expect(vctx.getParent(2)).toEqual({ path: 'p1', value: {id: 'parent 1'} });
+		expect(vctx.getParent(3)).toEqual({ path: 'p3', value: {id: 'parent 3'} });
+	});
 });

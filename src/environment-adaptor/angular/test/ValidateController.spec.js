@@ -155,4 +155,31 @@ describe('The ValidateController', function() {
 		scope.$digest();
 		expect(ngModel.$valid).toBe(false);
 	});
+
+	it('gets the model value', function() {
+		sut.configure(ngModel, validatorMock);
+		scope.model = { x: 123 };
+		scope.$digest();
+		expect(sut.getModelValue()).toBe(123);
+	});
+
+	it('knows its parent', function() {
+		sut.configure(ngModel, validatorMock, parentValidateMock);
+		expect(sut.getParentValidate()).toBe(parentValidateMock);
+	});
+
+	it('extends the ValidationContext so that getModelPath/getParent work correctly', function() {
+		parentValidateMock.getModelValue = function() { return {id: 'the parent'}; };
+		parentValidateMock.getParentValidate = function() { return null; };
+		spyOn(sut, 'calculateParentPath').and.callThrough();
+		sut.configure(ngModel, validatorMock, parentValidateMock);
+		var input = angular.element(elem[0].querySelector('input'));
+		input.val('a').triggerHandler('input');
+		var vctx = validatorMock.evaluateConstraints.calls.mostRecent().args[0];
+		expect(vctx.getParent()).toEqual({ path: '', value: {id: 'the parent'} });
+		expect(sut.calculateParentPath.calls.count()).toBe(1);
+		// make sure calculateParentPath is never called again
+		expect(vctx.getParent()).toEqual({ path: '', value: {id: 'the parent'} });
+		expect(sut.calculateParentPath.calls.count()).toBe(1);
+	});
 });

@@ -16,7 +16,8 @@ angular.module('egkyron').controller('ValidateController', ['$scope', '$attrs', 
 		controller = this,
 		type = null,
 		childType = null,
-		propName = null;
+		propName = null,
+		parentValidate = null;
 
 	/**
 	 * @ngdoc method
@@ -27,11 +28,12 @@ angular.module('egkyron').controller('ValidateController', ['$scope', '$attrs', 
 	 *
 	 * @param {NgModelController} ngModelValue - The `NgModelController`
 	 * @param {Validator} validatorValue - The validator to use (see the `validator` directive)
-	 * @param {ValidateController} parentValidate - The validator to use (see the `validator` directive)
+	 * @param {ValidateController} parentValidateValue - The validator to use (see the `validator` directive)
 	 */
-	function configure(ngModelValue, validatorValue, parentValidate) {
+	function configure(ngModelValue, validatorValue, parentValidateValue) {
 		ngModel = ngModelValue;
 		validator = validatorValue;
+		parentValidate = parentValidateValue;
 
 		if( !ngModel ) {
 			throw new Error('the ngModel is required');
@@ -115,13 +117,59 @@ angular.module('egkyron').controller('ValidateController', ['$scope', '$attrs', 
 
 	function evaluateConstraints(value, eager) {
 		var
-			validationContext = new ValidationContext(value),
+			validationContext = extendValidationContext(new ValidationContext(value)),
 			validationArgs;
 
 		validationArgs = validator.introspectionStrategy.prepareValidationFromScope($scope, processedModelExpression, controller.getType());
 		validator.evaluateConstraints(validationContext, validationArgs.constraints, validationArgs.ctxObject, value, eager);
 
 		return validationContext.result;
+	}
+
+	function extendValidationContext(vctx) {
+		var modelPathFixed = false, superGetModelPath = vctx.getModelPath;
+
+		vctx.getModelPath = function() {
+			if( !modelPathFixed ) {
+				controller.calculateParentPath(vctx);
+				modelPathFixed = true;
+			}
+
+			return superGetModelPath.apply(this, Array.prototype.slice.call(arguments, 0));
+		};
+
+		return vctx;
+	}
+
+	/**
+	 * @ngdoc method
+	 * @name egkyron.ValidateController#calculateParentPath
+	 *
+	 * @description
+	 * Called lazilly the first time <code>ValidationContext.getModelPath()</code> is invoked
+	 * to calculate the parent paths for this object.
+	 * <p>
+	 * Usually the validators will only care for the value of the field they are validating,
+	 * or values of other fields of the same object that contains this field. The
+	 * <code>ValidationContext.getModelPath()</code> method allows a validator to navigate up
+	 * the model path and depend on values of parent model nodes. The <code>ValidateController</code>
+	 * needs to take an extra step to construct the parent hierarchy, which is implemented by this method.
+	 * <p>
+	 * The current implementation walks the hierarchy of parent <code>ValidateController</code>s
+	 * and prepends the value of the model of each parent to the <code>ValidationContext</code>.
+	 * This method should be overriden if you need extra logic, e.g. if you need to prepend
+	 * even more parent paths after reaching the top of the <code>ValidateController</code>
+	 * hierarchy.
+	 *
+	 * @param {string} validatorKey - The validator key (e.g. <code>required</code> or <code>regExp</code>)
+	 * @param {ValidationResult} validationResult - The validation result
+	 */
+	function calculateParentPath(vctx) {
+		var validateCtrl = parentValidate;
+		while( validateCtrl ) {
+			vctx.prependParentPath(validateCtrl.getModelValue());
+			validateCtrl = validateCtrl.getParentValidate();
+		}
 	}
 
 	/**
@@ -177,6 +225,32 @@ angular.module('egkyron').controller('ValidateController', ['$scope', '$attrs', 
 
 	/**
 	 * @ngdoc method
+	 * @name egkyron.ValidateController#getParentValidate
+	 *
+	 * @description
+	 * Get the parent validate controller, if any.
+	 *
+	 * @returns {ValidateController} - The parent validate controller or <code>null</code>
+	 */
+	function getParentValidate() {
+		return parentValidate;
+	}
+
+	/**
+	 * @ngdoc method
+	 * @name egkyron.ValidateController#getModelValue
+	 *
+	 * @description
+	 * Get the current value of the model.
+	 *
+	 * @returns {any} - The current model value
+	 */
+	function getModelValue() {
+		return ngModel.$modelValue;
+	}
+
+	/**
+	 * @ngdoc method
 	 * @name egkyron.ValidateController#skipIndex
 	 *
 	 * @description
@@ -200,6 +274,9 @@ angular.module('egkyron').controller('ValidateController', ['$scope', '$attrs', 
 		handleMessage: handleMessage,
 		getType: getType,
 		getChildType: getChildType,
-		skipIndex: skipIndex
+		skipIndex: skipIndex,
+		getParentValidate: getParentValidate,
+		getModelValue: getModelValue,
+		calculateParentPath: calculateParentPath
 	});
 }]);

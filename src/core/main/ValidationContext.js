@@ -115,6 +115,14 @@ function ValidationContext(root) {
 	 * @private
 	 */
 	this._modelPath = [{ path: '', value: root }];
+	/**
+	 * Index of the root object in the <code>_modelPath</code> array, it
+	 * is used by <code>appendParentPath()</code> and affected by both
+	 * <code>prependParentPath()</code> and <code>appendParentPath()</code>.
+	 * @member {number}
+	 * @private
+	 */
+	this._modelPathRootIndex = 0;
 }
 
 /**
@@ -237,6 +245,29 @@ ValidationContext.prototype.getModelPath = function(index) {
 ValidationContext.prototype.getParent = function(index) {
 	var actualIndex = typeof index === 'number' ? index : 0;
 	return this.getModelPath(actualIndex + 1);
+};
+
+/**
+ * Insert a {@link ValidationPathEntry} at the top of the model path hierarchy.
+ *
+ * @param {any} value - The model value to prepend.
+ * @param {string|number} [propName] - Name (or index) of the prepended value.
+ */
+ValidationContext.prototype.prependParentPath = function(value, propName) {
+	this._modelPath.unshift({ path: propName != null ? propName : '', value: value });
+	this._modelPathRootIndex++;
+};
+
+/**
+ * Append a {@link ValidationPathEntry} at the bottom of the parents model path
+ * hierarchy, i.e. just before the root model node.
+ *
+ * @param {any} value - The model value to prepend.
+ * @param {string|number} [propName] - Name (or index) of the prepended value.
+ */
+ValidationContext.prototype.appendParentPath = function(value, propName) {
+	this._modelPath.splice(this._modelPathRootIndex, 0, { path: propName != null ? propName : '', value: value });
+	this._modelPathRootIndex++;
 };
 
 
