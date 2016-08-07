@@ -10,6 +10,7 @@ gulp.task('default', [
 	'intstrat.package.browser',
 	'envadaptor.test',
 	'envadaptor.package.angular',
+	'envadaptor.package.angular-browser',
 	'bower.angular'
 ]);
 
@@ -190,6 +191,23 @@ gulp.task('envadaptor.package.angular', function() {
 	return gulp
 		.src('./src/environment-adaptor/angular/main/**/*.js')
 		.pipe(gulp.dest('./target/dist/angular'));
+});
+
+gulp.task('envadaptor.package.angular-browser', ['envadaptor.package.angular'], function() {
+	var concat = require('gulp-concat');
+	var uglify = require('gulp-uglify');
+	var rename = require('gulp-rename');
+	var tap = require('gulp-tap');
+	var affix = require('./src/build/gulp-affix.js');
+
+	return gulp
+		.src(['./target/dist/angular/egkyron.module.js', './target/dist/angular/**/*.js'])
+		.pipe(concat('egkyron-angular.js'))
+		.pipe(gulp.dest('./target/dist/browser'))
+		.pipe(uglify())
+		.pipe(rename('egkyron-angular.min.js'))
+		.pipe(gulp.dest('./target/dist/browser'))
+	;
 });
 
 gulp.task('envadaptor.test', ['envadaptor.jshint', 'envadaptor.test.jshint', 'envadaptor.package.angular', 'core.package.angular'], function(done) {
