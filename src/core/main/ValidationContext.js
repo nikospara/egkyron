@@ -91,7 +91,7 @@ function ValidationContext(root) {
 	 * 	}
 	 * };
 	 *
-	 * @member {Object}
+	 * @member {ValidationResultNode}
 	 */
 	this.result = { _thisValid: true, _validity: null, _children: null };
 	/**
@@ -275,7 +275,7 @@ ValidationContext.prototype.appendParentPath = function(value, propName) {
 /**
  * Descriptor for a piece of the validation path.
  *
- * @class ValidationPathEntry
+ * @interface ValidationPathEntry
  */
 /**
  * The name (if it is an object property) or index (if the parent is an array)
@@ -289,4 +289,38 @@ ValidationContext.prototype.appendParentPath = function(value, propName) {
  *
  * @var {*} value
  * @memberof ValidationPathEntry.prototype
+ */
+
+
+
+/**
+ * Descriptor for a piece of the validation result.
+ *
+ * @interface ValidationResultNode
+ */
+/**
+ * Validity of this node, <code>true</code> if this node is valid.
+ *
+ * @var {boolean} _thisValid
+ * @memberof ValidationResultNode.prototype
+ */
+/**
+ * Validity of the children of this node, recursively;
+ * <code>true</code> if all the children at all levels are valid.
+ *
+ * @var {boolean} [_childrenValid]
+ * @memberof ValidationResultNode.prototype
+ */
+/**
+ * Validity of the children of this node, recursively;
+ * <code>true</code> if all the children at all levels are valid.
+ *
+ * @var {Object.<string, ValidationResult>} _validity
+ * @memberof ValidationResultNode.prototype
+ */
+/**
+ * Validation result nodes for the children (properties) of this model node, recursively.
+ *
+ * @var {Object.<string, ValidationResultNode>} [_children]
+ * @memberof ValidationResultNode.prototype
  */

@@ -1,7 +1,7 @@
 Egkyron
 =======
 
-Egkyron is a validation infrasrtructure library, with the goal of being capable to adapt to
+Egkyron is a validation infrastructure library, with the goal of being capable to adapt to
 various kinds of Javascript model objects, e.g. plain JSON, Knockout etc and environments,
 e.g. Node, Browser+AngularJS, Browser+React etc. The word *egkyron* means *valid* in Greek.
 
@@ -22,6 +22,7 @@ of the display logic.
 
 ### Changes
 
+- (2017/08/10) Typings for using egkyron with Typescript
 - (2017/08/10) Incorporated the `condition` branch into master; it adds the `condition` constraint parameter to conditionally deactivate the validation
 - (2016/06/09) The [React example](src/examples/react/README.md) is in the master.
 

@@ -57,7 +57,7 @@ gulp.task('core.package.node', ['core.jshint'], function() {
 				.src('./src/core/main/**/*.js')
 				.pipe(tap(affix('./src/packaging/node/affixes/'))),
 			gulp
-				.src(['./package.json', './LICENSE', './README.md', './src/packaging/node/index.js'])
+				.src(['./package.json', './LICENSE', './README.md', './src/packaging/node/index.js', './src/core/typings/index.d.ts'])
 		)
 		.pipe(gulp.dest('./target/dist/node'));
 });
@@ -130,7 +130,7 @@ gulp.task('intstrat.package.node', ['intstrat.jshint'], function() {
 		affix = require('./src/build/gulp-affix.js');
 
 	return gulp
-		.src('./src/introspection-strategy/main/**/*.js')
+		.src(['./src/introspection-strategy/main/**/*.js', './src/introspection-strategy/typings/index.d.ts'])
 		.pipe(tap(affix('./src/packaging/node/affixes/introspection-strategy/')))
 		.pipe(gulp.dest('./target/dist/node/introspection-strategy'));
 });

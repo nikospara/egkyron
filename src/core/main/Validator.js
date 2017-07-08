@@ -274,7 +274,7 @@ function inGroups(constraint, requiredGroups) {
  * A registry for {@linkplain Constraint~validator validator functions}.
  *
  * @name ValidatorRegistry
- * @class
+ * @interface
  */
 /**
  * Get a registered validator.
@@ -301,7 +301,7 @@ function inGroups(constraint, requiredGroups) {
  * A strategy for extracting validation information and introspecting the model.
  *
  * @name IntrospectionStrategy
- * @class
+ * @interface
  */
 /**
  * Extract the validity constraints for a property, given the model and, optionally, its type.

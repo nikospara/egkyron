@@ -26,7 +26,8 @@
 	"dependencies": {},
 	"devDependencies": {
 		"gulp": "^3.9.1",
-		"gulp-jshint": "2.0.1",
+		"gulp-jshint": "^2.0.1",
+		"jsdoc": "^3.4.3",
 		"jshint": "2.x",
 		"jshint-stylish": "^2.2.0",
 		"gulp-jsdoc": "^0.1.5",
@@ -44,5 +45,6 @@
 		"express": "^4.13.4",
 		"body-parser": "^1.15.1",
 		"bower": "^1.7.9"
-	}
+	},
+	"typings": "./index.d.ts"
 }
