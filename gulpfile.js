@@ -2,10 +2,9 @@ var gulp = require('gulp');
 
 
 gulp.task('default', [
-	'core.test',
+	'combined.test',
 	'core.package.angular',
 	'core.package.browser',
-	'intstrat.test',
 	'intstrat.package.angular',
 	'intstrat.package.browser',
 	'envadaptor.test',
@@ -229,6 +228,24 @@ gulp.task('envadaptor.test', ['envadaptor.jshint', 'envadaptor.test.jshint', 'en
 	);
 
 	server.start();
+});
+
+
+
+// It seems that running two test suites in parallel creates synchronization problems,
+// i.e. one suite reporting problems when there are none when it runs alone.
+// This is a workaround.
+gulp.task('combined.test', ['core.jshint', 'core.package.node', 'intstrat.jshint', 'intstrat.package.node'], function() {
+	var
+		jshint = require('gulp-jshint'),
+		jasmine = require('gulp-jasmine');
+
+	return gulp
+		.src(['./src/core/test/**/*.spec.js', './src/introspection-strategy/test/**/*.spec.js'])
+		.pipe(jshint())
+		.pipe(jshint.reporter('jshint-stylish'))
+		.pipe(jshint.reporter('fail'))
+		.pipe(jasmine({includeStackTrace: true}));
 });
 
 

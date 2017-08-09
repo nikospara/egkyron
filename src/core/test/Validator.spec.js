@@ -114,9 +114,9 @@ describe('The Validator', function() {
 
 			expect(vctx.setCurrentConstraintName.calls.allArgs()).toEqual([['failValidator'], [null], ['passValidator'], [null]]);
 			expect(failValidator.calls.count()).toBe(1);
-			expect(failValidator.calls.all()[0]).toEqual({object: ctxObject, args: [value, {groups: Validator.DEFAULT_GROUPS}, vctx], returnValue: false});
+			expect(failValidator.calls.mostRecent()).toEqual(jasmine.objectContaining({object: ctxObject, args: [value, {groups: Validator.DEFAULT_GROUPS}, vctx], returnValue: false}));
 			expect(passValidator.calls.count()).toBe(1);
-			expect(passValidator.calls.all()[0]).toEqual({object: ctxObject, args: [value, {groups: Validator.DEFAULT_GROUPS}, vctx], returnValue: true});
+			expect(passValidator.calls.mostRecent()).toEqual(jasmine.objectContaining({object: ctxObject, args: [value, {groups: Validator.DEFAULT_GROUPS}, vctx], returnValue: true}));
 			expect(vctx.addResult.calls.allArgs()).toEqual([[false], [true]]);
 		});
 
@@ -127,7 +127,7 @@ describe('The Validator', function() {
 
 			expect(vctx.setCurrentConstraintName.calls.allArgs()).toEqual([['failValidator'], [null]]);
 			expect(failValidator.calls.count()).toBe(1);
-			expect(failValidator.calls.all()[0]).toEqual({object: ctxObject, args: [value, {groups: Validator.DEFAULT_GROUPS}, vctx], returnValue: false});
+			expect(failValidator.calls.mostRecent()).toEqual(jasmine.objectContaining({object: ctxObject, args: [value, {groups: Validator.DEFAULT_GROUPS}, vctx], returnValue: false}));
 			expect(passValidator.calls.count()).toBe(0);
 			expect(vctx.addResult.calls.allArgs()).toEqual([[false]]);
 		});
@@ -139,7 +139,7 @@ describe('The Validator', function() {
 
 			expect(vctx.setCurrentConstraintName.calls.allArgs()).toEqual([['passValidator'], [null]]);
 			expect(passValidator.calls.count()).toBe(1);
-			expect(passValidator.calls.all()[0]).toEqual({object: ctxObject, args: [value, {groups: ['A']}, vctx], returnValue: true});
+			expect(passValidator.calls.mostRecent()).toEqual(jasmine.objectContaining({object: ctxObject, args: [value, {groups: ['A']}, vctx], returnValue: true}));
 			expect(failValidator.calls.count()).toBe(0);
 			expect(vctx.addResult.calls.allArgs()).toEqual([[true]]);
 		});
