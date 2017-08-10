@@ -12,6 +12,7 @@
 		"LICENSE",
 		"README.md",
 		"index.js",
+		"index.d.ts",
 		"Constraint.js",
 		"ValidationContext.js",
 		"ValidationResult.js",
