@@ -1,10 +1,10 @@
-export type ValidatorFn = (value: any, validationParameters: Object, validationContext: ValidationContext) => boolean;
+export type ValidatorFn<T> = (value: any, validationParameters: Object, validationContext: ValidationContext<T>) => boolean;
 
 /**
  * Descriptor of a constraint.
  * @constructor
  */
-export class Constraint {
+export class Constraint<T> {
     constructor();
 
     /**
@@ -17,7 +17,7 @@ export class Constraint {
      * The validator function.
      * @member {Constraint~validator}
      */
-    validator: ValidatorFn;
+    validator: ValidatorFn<T>;
 
     /**
      * Any parameterizations to the validation logic. Some params are standard, i.e. handled by the infrastructure:
@@ -38,7 +38,7 @@ export class Constraint {
  * @constructor
  * @param {*} root - The root object being validated.
  */
-export class ValidationContext {
+export class ValidationContext<T> {
     constructor(root: any);
 
     /**
@@ -123,7 +123,7 @@ export class ValidationContext {
      * };
      * @member {ValidationResultNode}
      */
-    result: ValidationResultNode;
+    result: ValidationResultNode<T>;
 
     /**
      * The message related to the current result, usually a string but may be anything that makes sense to the underlying message display mechanism.
@@ -241,7 +241,7 @@ export interface ValidationPathEntry {
  * Descriptor for a piece of the validation result.
  * @interface ValidationResultNode
  */
-declare interface ValidationResultNode {
+declare interface ValidationResultNode<T> {
     /**
      * Validity of this node, <code>true</code> if this node is valid.
      * @var {boolean} _thisValid
@@ -270,7 +270,7 @@ declare interface ValidationResultNode {
      * @memberof ValidationResultNode.prototype
      */
     _children: {
-        [key: string]: ValidationResultNode;
+        [K in keyof T]: ValidationResultNode<T[K]>;
     };
 }
 
@@ -337,7 +337,7 @@ export class Validator {
      * @param {string[]} [groups] - The groups to validate.
      * @returns {ValidationContext}
      */
-    validate(model: any, eager?: boolean, groups?: string[]): ValidationContext;
+    validate<T>(model: T, eager?: boolean, groups?: string[]): ValidationContext<T>;
 
     /**
      * Recursively validate the properties of the <code>model</code> object, optionally running only the specified groups
@@ -351,7 +351,7 @@ export class Validator {
      * @param {string[]} [props] - The properties of <code>model</code> to validate.
      * @returns {boolean} - If validation should go on.
      */
-    protected validateProperties(vctx: ValidationContext, model: any, type: string, eager?: boolean, groups?: string[], props?: string[]): boolean;
+    protected validateProperties<T>(vctx: ValidationContext<T>, model: any, type: string, eager?: boolean, groups?: string[], props?: string[]): boolean;
 
     /**
      * Validate a value given the constraints, optionally running only the specified groups.
@@ -366,7 +366,7 @@ export class Validator {
      * @param {boolean} [eager] - If <code>true</code>, validation will stop at the first failed contstraint.
      * @param {string[]} [groups] - The groups to validate.
      */
-    evaluateConstraints(vctx: ValidationContext, constraints: (Constraint)[], ctxObject: any, value: any, eager?: boolean, groups?: string[]): void;
+    evaluateConstraints<T>(vctx: ValidationContext<T>, constraints: (Constraint<T>)[], ctxObject: any, value: any, eager?: boolean, groups?: string[]): void;
 
     /**
      * Normalize an array of constraints and cache the result.
@@ -374,7 +374,7 @@ export class Validator {
      * @param {any[]} constraints - The array of constraints.
      * @returns {Constraint[]}
      */
-    protected normalizeConstraints(constraints: any[]): (Constraint)[];
+    protected normalizeConstraints<T>(constraints: any[]): (Constraint<T>)[];
 
     /**
      * Normalize a constraint, possibly expressed in a shorthand form, to a
@@ -397,7 +397,7 @@ export class Validator {
      * @param {any} constraint - A constraint object, possibly in shorthand form.
      * @returns {Constraint}
      */
-    protected normalizeConstraint(constraint: any): Constraint;
+    protected normalizeConstraint<T>(constraint: any): Constraint<T>;
 
 }
 
@@ -414,7 +414,7 @@ export interface ValidatorRegistry {
      * @param {string} name - The name (key) of the validator.
      * @returns {Constraint~validator}
      */
-    getRegisteredValidator(name: string): ValidatorFn;
+    getRegisteredValidator<T>(name: string): ValidatorFn<T>;
     /**
      * Register a validator.
      * @method registerValidator
@@ -422,7 +422,7 @@ export interface ValidatorRegistry {
      * @param {string} name - The name (key) of the validator.
      * @param {Constraint~validator} validator - The validator.
      */
-    registerValidator(name: string, validator: ValidatorFn): void;
+    registerValidator<T>(name: string, validator: ValidatorFn<T>): void;
 }
 
 /**
@@ -441,7 +441,7 @@ export interface IntrospectionStrategy {
      * @param {string} propertyName - Name of the property to validate.
      * @returns {Constraint[]|any[]} - Array of constraints in a format suitable to be passed to {@link Validator#evaluateConstraints}
      */
-    extractConstraintsFromContext(vctx: ValidationContext, model: any, type: string, propertyName: string): (Constraint)[] | any[];
+    extractConstraintsFromContext<T>(vctx: ValidationContext<T>, model: any, type: string, propertyName: string): (Constraint<T>)[] | any[];
     /**
      * Enumerate the properties of a model.
      * @method enumerateProps
@@ -451,7 +451,7 @@ export interface IntrospectionStrategy {
      * @param {string} type - Type of the object (an optional key for the validation constraints set).
      * @param {IntrospectionStrategy~enumeratePropsCallback} callback - The function to call for each property of the <code>model</code>.
      */
-    enumerateProps(vctx: ValidationContext, model: any, type: string, callback: enumeratePropsCallback): void;
+    enumerateProps<T>(vctx: ValidationContext<T>, model: any, type: string, callback: enumeratePropsCallback): void;
     /**
      * Evaluate the named property of a model.
      * @method evaluate
@@ -462,7 +462,7 @@ export interface IntrospectionStrategy {
      * @param {ValidationContext} vctx - The validation context.
      * @returns {*} - The value of the property.
      */
-    evaluate(model: any, propName: string, type: string, vctx: ValidationContext): any;
+    evaluate<T>(model: any, propName: string, type: string, vctx: ValidationContext<T>): any;
     /**
      * Determine the type of the given property of the given parent type.
      * @method findType
@@ -472,7 +472,7 @@ export interface IntrospectionStrategy {
      * @param {string} propName - The name of the property to evaluate.
      * @returns {string} - The type of the property.
      */
-    findType(vctx: ValidationContext, parentType: string, propName: string): string;
+    findType<T>(vctx: ValidationContext<T>, parentType: string, propName: string): string;
     /**
      * Optional member to decide if the validation algorithm should descend into the given property.
      * @method shouldDescend
@@ -483,7 +483,7 @@ export interface IntrospectionStrategy {
      * @param {ValidationContext} vctx - The validation context.
      * @returns {boolean} - Whether the validation algorithm should descend into the given property.
      */
-    shouldDescend?: (model: any, propName: string, type: string, vctx: ValidationContext) => boolean;
+    shouldDescend?: <T>(model: any, propName: string, type: string, vctx: ValidationContext<T>) => boolean;
 }
 
 /**
