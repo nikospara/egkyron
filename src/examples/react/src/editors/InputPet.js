@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Pet from 'model/Pet';
 import Vaccination from 'model/Vaccination';
 import InputText from 'controls/InputText';
@@ -6,8 +7,8 @@ import InputGender from './InputGender';
 import InputArray from './InputArray';
 import InputVaccination from './InputVaccination';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
 
 const GENDER_OPTIONS = [
@@ -42,7 +43,7 @@ export default class InputPet extends Component {
 
 	render() {
 		return (
-			<Row componentClass="fieldset">
+			<Row>
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
 				<Col sm={5}>
 					<InputText   label="Name"         {...attachInput(this, 'name')} />
@@ -54,7 +55,8 @@ export default class InputPet extends Component {
 					<InputGender label="Gender"       {...attachInput(this, 'gender')} options={GENDER_OPTIONS} />
 				</Col>
 				<Col sm={12}>
-					<InputArray  label="Vaccinations" {...attachInput(this, 'vaccinations')} innerComponent={InputVaccination} add={this.addVaccination.bind(this)} addLabel="Add vaccination" />
+					<InputArray  label="Vaccinations" {...attachInput(this, 'vaccinations')} innerComponent={InputVaccination}
+						add={this.addVaccination.bind(this)} addLabel="Add vaccination" removeLabel="Remove vaccination" />
 				</Col>
 			</Row>
 		);
@@ -62,8 +64,8 @@ export default class InputPet extends Component {
 }
 
 InputPet.propTypes = {
-	value: React.PropTypes.instanceOf(Pet),
-	onChange: React.PropTypes.func,
-	label: React.PropTypes.string,
-	validity: React.PropTypes.object
+	value: PropTypes.instanceOf(Pet),
+	onChange: PropTypes.func,
+	label: PropTypes.string,
+	validity: PropTypes.object
 };

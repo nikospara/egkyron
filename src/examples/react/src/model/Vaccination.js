@@ -2,8 +2,8 @@ export default class Vaccination {
 	constructor(jsonArg) {
 		var json = jsonArg || {};
 		this.id = json.id || null;
-		this.type = json && json.type || null;
-		this.date = json && json.date || null;
+		this.type = (json && json.type) || null;
+		this.date = (json && json.date) || null;
 	}
 }
 

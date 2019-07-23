@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Vaccination from 'model/Vaccination';
 import InputText from 'controls/InputText';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export default class InputVaccination extends Component {
 	constructor(props) {
@@ -28,13 +29,13 @@ export default class InputVaccination extends Component {
 
 	render() {
 		return (
-			<Row componentClass="fieldset">
+			<Row>
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
 				<Col sm={7}>
-					<InputText  label="Type" {...attachInput(this, 'type')} />
+					<InputText label="Type" {...attachInput(this, 'type')} />
 				</Col>
 				<Col sm={5}>
-					<InputText  label="Date" {...attachInput(this, 'date')} />
+					<InputText label="Date" {...attachInput(this, 'date')} />
 				</Col>
 			</Row>
 		);
@@ -42,8 +43,8 @@ export default class InputVaccination extends Component {
 }
 
 InputVaccination.propTypes = {
-	value: React.PropTypes.instanceOf(Vaccination),
-	onChange: React.PropTypes.func,
-	label: React.PropTypes.string,
-	validity: React.PropTypes.object
+	value: PropTypes.instanceOf(Vaccination),
+	onChange: PropTypes.func,
+	label: PropTypes.string,
+	validity: PropTypes.object
 };

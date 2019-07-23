@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Owner from 'model/Owner';
 import Pet from 'model/Pet';
 import InputText from 'controls/InputText';
@@ -6,8 +7,8 @@ import InputAddress from './InputAddress';
 import InputArray from './InputArray';
 import InputPet from './InputPet';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
 
 export default class InputOwner extends Component {
@@ -37,7 +38,7 @@ export default class InputOwner extends Component {
 
 	render() {
 		return (
-			<Row componentClass="fieldset">
+			<Row>
 				{this.props.label ?
 				<Col sm={12}>
 					<legend>{this.props.label}</legend>
@@ -53,7 +54,8 @@ export default class InputOwner extends Component {
 					<InputAddress label="Address" {...attachInput(this, 'address')} />
 				</Col>
 				<Col sm={12}>
-					<InputArray label="Pets" {...attachInput(this, 'pets')} innerComponent={InputPet} add={this.addPet.bind(this)} addLabel="Add pet" />
+					<InputArray label="Pets" {...attachInput(this, 'pets')} innerComponent={InputPet}
+						add={this.addPet.bind(this)} addLabel="Add pet" removeLabel="Remove pet" />
 				</Col>
 			</Row>
 		);
@@ -61,8 +63,8 @@ export default class InputOwner extends Component {
 }
 
 InputOwner.propTypes = {
-	value: React.PropTypes.instanceOf(Owner),
-	onChange: React.PropTypes.func,
-	label: React.PropTypes.string,
-	validity: React.PropTypes.object
+	value: PropTypes.instanceOf(Owner),
+	onChange: PropTypes.func,
+	label: PropTypes.string,
+	validity: PropTypes.object
 };

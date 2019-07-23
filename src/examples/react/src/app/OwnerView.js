@@ -3,18 +3,23 @@ import Validator from 'egkyron/Validator';
 import ConstructorIntrospector from 'egkyron/introspection-strategy/ConstructorIntrospector';
 import Owner from 'model/Owner';
 import makeValidatorRegistry from 'model/makeValidatorRegistry';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
-import Button from 'react-bootstrap/lib/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import InputOwner from 'editors/InputOwner';
+
+const BUTTON_SPAN = Object.freeze({
+	span: 4,
+	offset: 4
+});
 
 export default class OwnerView extends Component {
 	constructor(props) {
 		super(props);
-		this.state = this._makeState(props);
+		this.state = this._makeState();
 	}
 
-	_makeState(props) {
+	_makeState() {
 		var validator, value;
 		// create an Egkyron Validator
 		validator = new Validator(makeValidatorRegistry(), new ConstructorIntrospector());
@@ -40,7 +45,7 @@ console.log('new model: ', value);
 	submitOwner() {
 console.log('VALUE:', this.state.value);
 	}
-
+				
 	render() {
 		var isInvalid = this.state.validity._thisValid === false || this.state.validity._childrenValid === false;
 
@@ -51,8 +56,8 @@ console.log('VALUE:', this.state.value);
 					<InputOwner value={this.state.value} onChange={this.onModelChange.bind(this)} validity={this.state.validity} />
 				</form>
 				<Row>
-					<Col sm={4} smOffset={4}>
-						<Button block={true} bsStyle="primary" onClick={this.submitOwner.bind(this)} disabled={isInvalid}>Submit</Button>
+					<Col sm={BUTTON_SPAN}>
+						<Button block={true} variant="primary" onClick={this.submitOwner.bind(this)} disabled={isInvalid}>Submit</Button>
 					</Col>
 				</Row>
 			</section>

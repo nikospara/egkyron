@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Address from 'model/Address';
 import InputText from 'controls/InputText';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
@@ -36,8 +37,8 @@ export default class InputAddress extends Component {
 }
 
 InputAddress.propTypes = {
-	value: React.PropTypes.instanceOf(Address),
-	onChange: React.PropTypes.func,
-	label: React.PropTypes.string,
-	validity: React.PropTypes.object
+	value: PropTypes.instanceOf(Address),
+	onChange: PropTypes.func,
+	label: PropTypes.string,
+	validity: PropTypes.object
 };

@@ -1,18 +1,18 @@
 React example
 =============
 
-This example demonstrates the usage of Egkyron with React.
+This example demonstrates a configuration for using Egkyron with React.
 
 ### Running
 
-This example is using Webpack.
+This example is using [create-react-app](https://facebook.github.io/create-react-app/).
 Install everything with `npm install` and run `npm start`.
-It has no server (other than the dev server of Webpack).
+It has no server (other than the dev server of Webpack used from create-react-app).
 If you are interested in using Egkyron with Node, please see the Angular example.
 
-Open `http://localhost:8180/index.html` in the browser.
+The local browser will open automatically at `http://localhost:3000/`.
 
-The fields with constraints are the name of the pet owner (under "Personal data") (length 2 to 20, no spaces) and the name of the pet (length 3 to 20 for the `ConstructorIntrospector`, and 3 to 10 for the `ExternalConstraintsIntrospector`, no spaces).
+The fields with constraints are the name of the pet owner (under "Personal data") (length 2 to 20, no spaces) and the name of the pet (length 3 to 20, no spaces).
 
 The concept of editors
 ----------------------
@@ -29,13 +29,13 @@ Two common solutions (in pseudocode) are:
 
 This example (and the previous Angular 1.x example) uses a technique similar to the second case, but the address object itself changes with every change of its properties.
 This approach is compatible with the current trend of using immutable objects for the model of the application.
-The address editor is used in this example as (see `InputOwner.js` and `InputAddress.js` under `app/app/editors`):
+The address editor is used in this example as (see `InputOwner.js` and `InputAddress.js` under `src/editors`):
 
 ```jsx
 <InputAddress label="Address" {...attachInput(this, 'address')} />
 ```
 
-The helper `attachInput()` (see `app/controls/utils.js`) attaches the value and the validation state of the `address` property of the value of the current component to the given `<InputAddress>` editor. And it is simply implemented as:
+The helper `attachInput()` (see `src/controls/utils.js`) attaches the value and the validation state of the `address` property of the value of the current component to the given `<InputAddress>` editor. And it is simply implemented as:
 
 ```jsx
 export function attachInput(component, fieldName) {
@@ -47,13 +47,13 @@ export function attachInput(component, fieldName) {
 }
 ```
 
-There editor-to-model relationship is potentially many editors for each model.
+The editor-to-model relationship is potentially many editors for each model.
 Whenever the need to edit a model or a subset of its properties arises, write an editor.
 
 Disecting an editor
 -------------------
 
-Technically an editor (see everything under `app/editors` and `app/controls/InputText.js`) is a React component having at least 3 properties:
+Technically an editor (see everything under `src/editors` and `src/controls/InputText.js`) is a React component having at least 3 properties:
 
 - `value` is the initial value of the editor
 - `onChange` is a callback to notify the parent of changes of this property
@@ -128,4 +128,4 @@ If performance problems do arise, there are at least two things to try:
 
 If a property holds an array of things, there is an editor for that too:
 the edit operations are addition, deletion and reordering of elements.
-See the `app/editors/InputArray.js`.
+See the `src/editors/InputArray.js`.

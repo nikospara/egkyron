@@ -1,8 +1,8 @@
 export default class Address {
 	constructor(jsonArg) {
 		var json = jsonArg || {};
-		this.street = json && json.street || null;
-		this.number = json && json.number || null;
+		this.street = (json && json.street) || null;
+		this.number = (json && json.number) || null;
 	}
 }
 

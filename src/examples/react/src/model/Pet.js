@@ -4,9 +4,9 @@ export default class Pet {
 	constructor(jsonArg) {
 		var json = jsonArg || {};
 		this.id = json.id || null;
-		this.name = json && json.name || null;
-		this.type = json && json.type || null;
-		this.gender = json && json.gender || null;
+		this.name = (json && json.name) || null;
+		this.type = (json && json.type) || null;
+		this.gender = (json && json.gender) || null;
 		this.vaccinations = json && json.vaccinations ? json.vaccinations.map(Vaccination.factory) : [];
 	}
 }

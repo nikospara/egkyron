@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
 
-export default class InputText extends Component {
+export default class InputGender extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this._makeState(props);
-	}
-
-	componentWillReceiveProps(nextProps) {
-		this.setState(this._makeState(nextProps));
 	}
 
 	_makeState(props) {
@@ -18,7 +15,17 @@ export default class InputText extends Component {
 	}
 
 	handleChange(event) {
-		this.props.onChange && this.props.onChange(event.target.value);
+		this.setState({
+			value: event.target.value || ''
+		});
+		this.props.onChange && this.props.onChange(event.target.value || null);
+	}
+
+	_makeOptions() {
+		return [
+			<option key=""></option>,
+			...this.props.options.map(o => <option value={o.id} key={o.id}>{o.label}</option>)
+		];
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -32,16 +39,19 @@ export default class InputText extends Component {
 		return (
 			<div className={className}>
 				<label>{this.props.label}</label>
-				<input type="text" className="form-control" value={this.state.value} onChange={this.handleChange.bind(this)} />
+				<select className="form-control" value={this.state.value} onChange={this.handleChange.bind(this)}>
+					{this._makeOptions()}
+				</select>
 				{messages}
 			</div>
 		);
 	}
 }
 
-InputText.propTypes = {
-	value: React.PropTypes.string,
-	onChange: React.PropTypes.func,
-	label: React.PropTypes.string,
-	validity: React.PropTypes.object
+InputGender.propTypes = {
+	options: PropTypes.array,
+	value: PropTypes.string,
+	onChange: PropTypes.func,
+	label: PropTypes.string,
+	validity: PropTypes.object
 };

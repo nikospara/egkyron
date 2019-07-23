@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
-import Button from 'react-bootstrap/lib/Button';
+import Button from 'react-bootstrap/Button';
 
 export default class InputArray extends Component {
 	constructor(props) {
@@ -45,7 +46,7 @@ export default class InputArray extends Component {
 		return (
 			<div className="input-array-row-wrapper" key={item.id}>
 				<this.props.innerComponent {...attachInput(this, index)} />
-				<Button bsStyle="danger" bsSize="xsmall" onClick={() => this.removeItem(item)}><span className="glyphicon glyphicon-remove" title="Remove"></span></Button>
+				<Button variant="danger" size="sm" onClick={() => this.removeItem(item)}>{this.props.removeLabel || 'Remove'}</Button>
 			</div>
 		);
 	}
@@ -57,7 +58,7 @@ export default class InputArray extends Component {
 	render() {
 		return (
 			<fieldset>
-				{this.props.label ? <legend>{this.props.label} <Button bsStyle="link" onClick={this.add.bind(this)}>{this.props.addLabel || 'Add'}</Button></legend> : null}
+				{this.props.label ? <legend>{this.props.label} <Button variant="link" onClick={this.add.bind(this)}>{this.props.addLabel || 'Add'}</Button></legend> : null}
 				{this.props.value.map(this._renderInnerComponent.bind(this))}
 			</fieldset>
 		);
@@ -65,11 +66,12 @@ export default class InputArray extends Component {
 }
 
 InputArray.propTypes = {
-	value: React.PropTypes.array,
-	onChange: React.PropTypes.func,
-	label: React.PropTypes.string,
-	add: React.PropTypes.func,
-	addLabel: React.PropTypes.any,
-	innerComponent: React.PropTypes.func.isRequired,
-	validity: React.PropTypes.object
+	value: PropTypes.array,
+	onChange: PropTypes.func,
+	label: PropTypes.string,
+	add: PropTypes.func,
+	addLabel: PropTypes.any,
+	removeLabel: PropTypes.any,
+	innerComponent: PropTypes.func.isRequired,
+	validity: PropTypes.object
 };
