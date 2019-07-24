@@ -12,11 +12,17 @@ import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
 
 export default class InputOwner extends Component {
+
+	_handlers = {
+		addPet: null
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			value: props.value || new Owner()
 		};
+		this._handlers.addPet = this.addPet.bind(this);
 	}
 
 	handleChange(field, value) {
@@ -55,7 +61,7 @@ export default class InputOwner extends Component {
 				</Col>
 				<Col sm={12}>
 					<InputArray label="Pets" {...attachInput(this, 'pets')} innerComponent={InputPet}
-						add={this.addPet.bind(this)} addLabel="Add pet" removeLabel="Remove pet" />
+						add={this._handlers.addPet} addLabel="Add pet" removeLabel="Remove pet" />
 				</Col>
 			</Row>
 		);

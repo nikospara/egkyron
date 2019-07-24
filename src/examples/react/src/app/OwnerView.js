@@ -14,9 +14,17 @@ const BUTTON_SPAN = Object.freeze({
 });
 
 export default class OwnerView extends Component {
+
+	_handlers = {
+		onModelChange: null,
+		submitOwner: null
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = this._makeState();
+		this._handlers.onModelChange = this.onModelChange.bind(this);
+		this._handlers.submitOwner = this.submitOwner.bind(this);
 	}
 
 	_makeState() {
@@ -53,11 +61,11 @@ console.log('VALUE:', this.state.value);
 			<section className="owner-view">
 				<h2>Owner</h2>
 				<form autoComplete="off" noValidate="novalidate">
-					<InputOwner value={this.state.value} onChange={this.onModelChange.bind(this)} validity={this.state.validity} />
+					<InputOwner value={this.state.value} onChange={this._handlers.onModelChange} validity={this.state.validity} />
 				</form>
 				<Row>
 					<Col sm={BUTTON_SPAN}>
-						<Button block={true} variant="primary" onClick={this.submitOwner.bind(this)} disabled={isInvalid}>Submit</Button>
+						<Button block={true} variant="primary" onClick={this._handlers.submitOwner} disabled={isInvalid}>Submit</Button>
 					</Col>
 				</Row>
 			</section>

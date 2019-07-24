@@ -4,11 +4,17 @@ import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
 import Button from 'react-bootstrap/Button';
 
 export default class InputArray extends Component {
+
+	_handlers = {
+		add: null
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			value: props.value || []
 		};
+		this._handlers.add = this.add.bind(this);
 	}
 
 	handleChange(field, value) {
@@ -58,7 +64,7 @@ export default class InputArray extends Component {
 	render() {
 		return (
 			<fieldset>
-				{this.props.label ? <legend>{this.props.label} <Button variant="link" onClick={this.add.bind(this)}>{this.props.addLabel || 'Add'}</Button></legend> : null}
+				{this.props.label ? <legend>{this.props.label} <Button variant="link" onClick={this._handlers.add}>{this.props.addLabel || 'Add'}</Button></legend> : null}
 				{this.props.value.map(this._renderInnerComponent.bind(this))}
 			</fieldset>
 		);

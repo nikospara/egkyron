@@ -3,9 +3,15 @@ import PropTypes from 'prop-types';
 import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
 
 export default class InputGender extends Component {
+
+	_handlers = {
+		handleChange: null
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = this._makeState(props);
+		this._handlers.handleChange = this.handleChange.bind(this);
 	}
 
 	_makeState(props) {
@@ -39,7 +45,7 @@ export default class InputGender extends Component {
 		return (
 			<div className={className}>
 				<label>{this.props.label}</label>
-				<select className="form-control" value={this.state.value} onChange={this.handleChange.bind(this)}>
+				<select className="form-control" value={this.state.value} onChange={this._handlers.handleChange}>
 					{this._makeOptions()}
 				</select>
 				{messages}

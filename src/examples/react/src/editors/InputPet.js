@@ -17,11 +17,17 @@ const GENDER_OPTIONS = [
 ];
 
 export default class InputPet extends Component {
+
+	_handlers = {
+		addVaccination: null
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			value: props.value || new Pet()
 		};
+		this._handlers.addVaccination = this.addVaccination.bind(this);
 	}
 
 	handleChange(field, value) {
@@ -56,7 +62,7 @@ export default class InputPet extends Component {
 				</Col>
 				<Col sm={12}>
 					<InputArray  label="Vaccinations" {...attachInput(this, 'vaccinations')} innerComponent={InputVaccination}
-						add={this.addVaccination.bind(this)} addLabel="Add vaccination" removeLabel="Remove vaccination" />
+						add={this._handlers.addVaccination} addLabel="Add vaccination" removeLabel="Remove vaccination" />
 				</Col>
 			</Row>
 		);
