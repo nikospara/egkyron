@@ -7,7 +7,7 @@ import InputGender from './InputGender';
 import InputArray from './InputArray';
 import InputVaccination from './InputVaccination';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
-import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
 
@@ -49,7 +49,7 @@ export default class InputPet extends Component {
 
 	render() {
 		return (
-			<Row>
+			<Form.Row>
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
 				<Col sm={5}>
 					<InputText   label="Name"         {...attachInput(this, 'name')} />
@@ -64,7 +64,7 @@ export default class InputPet extends Component {
 					<InputArray  label="Vaccinations" {...attachInput(this, 'vaccinations')} innerComponent={InputVaccination}
 						add={this._handlers.addVaccination} addLabel="Add vaccination" removeLabel="Remove vaccination" />
 				</Col>
-			</Row>
+			</Form.Row>
 		);
 	}
 }

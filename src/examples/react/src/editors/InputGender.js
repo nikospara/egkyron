@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Form from 'react-bootstrap/Form';
 import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
 
 export default class InputGender extends Component {
@@ -39,17 +40,19 @@ export default class InputGender extends Component {
 	}
 
 	render() {
-		var className = 'form-group' + (this.props.validity == null || this.props.validity._thisValid !== false ? '' : ' has-error');
 		var messages = makeMessages(this);
+		var isInvalid = this.props.validity != null && this.props.validity._thisValid === false;
 
 		return (
-			<div className={className}>
-				<label>{this.props.label}</label>
-				<select className="form-control" value={this.state.value} onChange={this._handlers.handleChange}>
+			<Form.Group>
+				<Form.Label>{this.props.label}</Form.Label>
+				<Form.Control as="select" value={this.state.value} onChange={this._handlers.handleChange} isInvalid={isInvalid}>
 					{this._makeOptions()}
-				</select>
-				{messages}
-			</div>
+				</Form.Control>
+				<Form.Control.Feedback type="invalid">
+					{messages}
+				</Form.Control.Feedback>
+			</Form.Group>
 		);
 	}
 }

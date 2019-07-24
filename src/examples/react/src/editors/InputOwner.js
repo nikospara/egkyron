@@ -7,7 +7,7 @@ import InputAddress from './InputAddress';
 import InputArray from './InputArray';
 import InputPet from './InputPet';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
-import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
 
@@ -44,7 +44,7 @@ export default class InputOwner extends Component {
 
 	render() {
 		return (
-			<Row>
+			<Form.Row>
 				{this.props.label ?
 				<Col sm={12}>
 					<legend>{this.props.label}</legend>
@@ -63,7 +63,7 @@ export default class InputOwner extends Component {
 					<InputArray label="Pets" {...attachInput(this, 'pets')} innerComponent={InputPet}
 						add={this._handlers.addPet} addLabel="Add pet" removeLabel="Remove pet" />
 				</Col>
-			</Row>
+			</Form.Row>
 		);
 	}
 }

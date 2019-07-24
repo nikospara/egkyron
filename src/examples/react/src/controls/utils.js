@@ -13,7 +13,7 @@ export function makeMessages(component) {
 	return (!component.props.validity || !component.props.validity._validity) ? null : Object.getOwnPropertyNames(component.props.validity._validity)
 		.map(x => [x, component.props.validity._validity[x]])
 		.filter(m => m[1].isValid === false)
-		.map(m => <span className="help-block" key={m[0]}>{m[0]}</span>)
+		.map(m => <div className="validation-message-block" key={m[0]}>{m[0]}</div>)
 	;
 }
 

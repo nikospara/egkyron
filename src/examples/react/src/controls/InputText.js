@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Form from 'react-bootstrap/Form';
 import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
 
 export default class InputText extends Component {
@@ -33,15 +34,17 @@ export default class InputText extends Component {
 	}
 
 	render() {
-		var className = 'form-group' + (this.props.validity == null || this.props.validity._thisValid !== false ? '' : ' has-error');
 		var messages = makeMessages(this);
+		var isInvalid = this.props.validity != null && this.props.validity._thisValid === false;
 
 		return (
-			<div className={className}>
-				<label>{this.props.label}</label>
-				<input type="text" className="form-control" value={this.state.value} onChange={this._handlers.handleChange} />
-				{messages}
-			</div>
+			<Form.Group>
+				<Form.Label>{this.props.label}</Form.Label>
+				<Form.Control as="input" type="text" value={this.state.value} onChange={this._handlers.handleChange} isInvalid={isInvalid} />
+				<Form.Control.Feedback type="invalid">
+					{messages}
+				</Form.Control.Feedback>
+			</Form.Group>
 		);
 	}
 }

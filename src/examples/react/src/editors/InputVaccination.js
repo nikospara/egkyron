@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Vaccination from 'model/Vaccination';
 import InputText from 'controls/InputText';
 import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
-import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
 export default class InputVaccination extends Component {
@@ -29,7 +29,7 @@ export default class InputVaccination extends Component {
 
 	render() {
 		return (
-			<Row>
+			<Form.Row>
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
 				<Col sm={7}>
 					<InputText label="Type" {...attachInput(this, 'type')} />
@@ -37,7 +37,7 @@ export default class InputVaccination extends Component {
 				<Col sm={5}>
 					<InputText label="Date" {...attachInput(this, 'date')} />
 				</Col>
-			</Row>
+			</Form.Row>
 		);
 	}
 }
