@@ -182,8 +182,9 @@ export class ValidationContext<T> {
     /**
      * Convenience method to check if this, or any path validation result passed as argument is valid.
      * @param {object} [arg] - The path validation result, if left <code>null</code> or <code>undefined</code> the results of this object are checked.
+     * @returns {boolean}
      */
-    hasValidationErrors(arg?: any): void;
+    hasValidationErrors(arg?: any): boolean;
 
     /**
      * Access the property names and values of the path.
