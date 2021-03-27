@@ -29,29 +29,27 @@ interface InputPetState {
 
 export default class InputPet extends Component<InputPetProps,InputPetState> {
 
-	private _handlers: { [key:string]: any } = {
-		addVaccination: null
-	};
-
 	constructor(props: InputPetProps) {
 		super(props);
 		this.state = {
 			value: props.value || new Pet(),
 			formGrp: new FormGroup({
+				id: new FormControl(),
 				name: new FormControl(),
 				type: new FormControl(),
 				gender: new FormControl(),
 				vaccinations: new FormControl()
 			})
 		};
-		this._handlers.addVaccination = this.addVaccination.bind(this);
+		this.state.formGrp.setValue(this.state.value);
 		this.state.formGrp.valueChanges.subscribe(value => {
-			var newValue = new Pet(Object.assign({}, this.state.value, value));
+			var newValue = new Pet(value);
 			this.setState({
 				value: newValue
 			});
 			this.props.onChange && this.props.onChange(newValue);
 		});
+		this.addVaccination = this.addVaccination.bind(this);
 	}
 
 	addVaccination() {
@@ -82,7 +80,7 @@ export default class InputPet extends Component<InputPetProps,InputPetState> {
 				<Col sm={12}>
 					<Editor control={this.state.formGrp.controls.vaccinations}>{(state: EditorComponentProps<Vaccination[]>) => (
 						<InputArray  label="Vaccinations" {...state} innerComponent={InputVaccination}
-							add={this._handlers.addVaccination} addLabel="Add vaccination" removeLabel="Remove vaccination" />
+							add={this.addVaccination} addLabel="Add vaccination" removeLabel="Remove vaccination" />
 					)}</Editor>
 				</Col>
 			</Form.Row>

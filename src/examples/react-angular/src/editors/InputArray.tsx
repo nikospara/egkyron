@@ -20,23 +20,25 @@ interface InputArrayState<V> {
 
 export default class InputArray<V extends { id: string | null }> extends Component<InputArrayProps<V>,InputArrayState<V>> {
 
-	private _handlers: { [key:string]: any } = {
-		add: null
-	};
-
 	constructor(props: InputArrayProps<V>) {
 		super(props);
+		const value = props.value || [];
+		const controls = value.map(item => {
+			const control = new FormControl();
+			control.setValue(item);
+			return control;
+		});
 		this.state = {
-			value: props.value || [],
-			formArray: new FormArray([]) // TODO map the value to controls!
+			value,
+			formArray: new FormArray(controls)
 		};
-		this._handlers.add = this.add.bind(this);
 		this.state.formArray.valueChanges.subscribe(value => {
 			this.setState({
 				value: value
 			});
 			this.props.onChange && this.props.onChange(value);
 		});
+		this.add = this.add.bind(this);
 	}
 
 	add() {
@@ -76,7 +78,7 @@ export default class InputArray<V extends { id: string | null }> extends Compone
 	render() {
 		return (
 			<fieldset>
-				{this.props.label ? <legend>{this.props.label} <Button variant="link" onClick={this._handlers.add}>{this.props.addLabel || 'Add'}</Button></legend> : null}
+				{this.props.label ? <legend>{this.props.label} <Button variant="link" onClick={this.add}>{this.props.addLabel || 'Add'}</Button></legend> : null}
 				{this.props.value ? this.props.value.map(this._renderInnerComponent.bind(this)) : null}
 			</fieldset>
 		);

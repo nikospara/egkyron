@@ -15,7 +15,7 @@ export default class Owner {
 	address: Address | null;
 	pets: Pet[];
 
-	constructor(jsonArg?: Partial<Owner> | null | undefined) {
+	constructor(jsonArg?: any) {
 		var json = jsonArg || {};
 		this.name = json.name || null;
 		this.address = Address.factory(json.address);

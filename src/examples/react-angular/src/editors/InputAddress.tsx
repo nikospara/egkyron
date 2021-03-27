@@ -25,8 +25,9 @@ export default class InputAddress extends Component<InputAddressProps,InputAddre
 				number: new FormControl(),
 			})
 		};
+		this.state.formGrp.setValue(this.state.value);
 		this.state.formGrp.valueChanges.subscribe(value => {
-			var newValue = new Address(Object.assign({}, this.state.value, value));
+			var newValue = new Address(value);
 			this.setState({
 				value: newValue
 			});

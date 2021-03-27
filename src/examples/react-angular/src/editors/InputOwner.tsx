@@ -25,10 +25,6 @@ interface InputOwnerState {
 
 export default class InputOwner extends Component<InputOwnerProps,InputOwnerState> {
 
-	private _handlers: { [key:string]: any } = {
-		addPet: null
-	};
-
 	constructor(props: InputOwnerProps) {
 		super(props);
 		this.state = {
@@ -39,7 +35,7 @@ export default class InputOwner extends Component<InputOwnerProps,InputOwnerStat
 				pets: new FormControl()
 			})
 		};
-		this._handlers.addPet = this.addPet.bind(this);
+		this.state.formGrp.setValue(this.state.value);
 		this.state.formGrp.valueChanges.subscribe(value => {
 			const newValue = new Owner(value);
 			this.setState({
@@ -47,6 +43,7 @@ export default class InputOwner extends Component<InputOwnerProps,InputOwnerStat
 			});
 			this.props.onChange && this.props.onChange(newValue);
 		});
+		this.addPet = this.addPet.bind(this);
 	}
 
 	addPet() {
@@ -77,7 +74,7 @@ export default class InputOwner extends Component<InputOwnerProps,InputOwnerStat
 				<Col sm={12}>
 					<Editor control={this.state.formGrp.controls.pets}>{(state: EditorComponentProps<Pet[]>) => (
 						<InputArray label="Pets" {...state} innerComponent={InputPet}
-							add={this._handlers.addPet} addLabel="Add pet" removeLabel="Remove pet" />
+							add={this.addPet} addLabel="Add pet" removeLabel="Remove pet" />
 					)}</Editor>
 				</Col>
 			</Form.Row>

@@ -23,12 +23,14 @@ export default class InputVaccination extends Component<InputVaccinationProps,In
 		this.state = {
 			value: props.value || new Vaccination(),
 			formGrp: new FormGroup({
+				id: new FormControl(),
 				type: new FormControl(),
 				date: new FormControl(),
 			})
 		};
+		this.state.formGrp.setValue(this.state.value);
 		this.state.formGrp.valueChanges.subscribe(value => {
-			var newValue = new Vaccination(Object.assign({}, this.state.value, value));
+			var newValue = new Vaccination(value);
 			this.setState({
 				value: newValue
 			});
