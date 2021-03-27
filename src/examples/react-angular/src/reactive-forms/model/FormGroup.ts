@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-angle-bracket-type-assertion */
+
 import { AbstractControl } from './AbstractControl';
 import { FormControl } from './FormControl';
 import { ValidatorFn, AsyncValidatorFn, AbstractControlOptions } from './types';

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-angle-bracket-type-assertion */
+
 import { Observable, Subject, from, forkJoin, isObservable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -22,7 +24,7 @@ function compose(validators: (ValidatorFn|null|undefined)[]): ValidatorFn|null;
 function compose(validators: (ValidatorFn|null|undefined)[]|null): ValidatorFn|null {
 	if (!validators) return null;
 	const presentValidators: ValidatorFn[] = validators.filter(o => o != null) as any;
-	if (presentValidators.length == 0) return null;
+	if (presentValidators.length === 0) return null;
 
 	return function(control: AbstractControl) {
 		return _mergeErrors(_executeValidators(control, presentValidators));
@@ -44,7 +46,7 @@ function toObservable(r: any): Observable<any> {
 function composeAsync(validators: (AsyncValidatorFn|null)[]): AsyncValidatorFn|null {
 	if (!validators) return null;
 	const presentValidators: AsyncValidatorFn[] = validators.filter(o => o != null) as any;
-	if (presentValidators.length == 0) return null;
+	if (presentValidators.length === 0) return null;
 
 	return function(control: AbstractControl) {
 		const observables = presentValidators.map(v => toObservable(v(control)))
@@ -204,7 +206,7 @@ export abstract class AbstractControl<ParentType extends AbstractControl<ParentT
 	 * @returns True if this control is in the process of conducting a validation check,
 	 * false otherwise.
 	 */
-	get pending(): boolean { return this.status == PENDING; }
+	get pending(): boolean { return this.status === PENDING; }
 
 	/**
 	 * A control is `disabled` when its `status` is `DISABLED`.
