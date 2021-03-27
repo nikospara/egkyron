@@ -1,6 +1,7 @@
 import { AbstractControl } from './AbstractControl';
 import { FormControl } from './FormControl';
 import { ValidatorFn, AsyncValidatorFn, AbstractControlOptions } from './types';
+import { FormGroup } from './FormGroup';
 
 /**
  * Tracks the value and validity state of an array of `FormControl`,
@@ -66,7 +67,7 @@ import { ValidatorFn, AsyncValidatorFn, AbstractControlOptions } from './types';
  *
  * @publicApi
  */
-export class FormArray extends AbstractControl {
+export class FormArray extends AbstractControl<FormArray|FormGroup> {
 	/**
 	* Creates a new `FormArray` instance.
 	*
@@ -347,6 +348,10 @@ export class FormArray extends AbstractControl {
 		this._forEachChild((control: AbstractControl) => control._registerOnCollectionChange(() => {}));
 		this.controls.splice(0);
 		this.updateValueAndValidity();
+	}
+
+	protected getChild(arg: string|number): AbstractControl|null {
+		return this.at(<number>arg) || null;
 	}
 
 	/** @internal */

@@ -4,8 +4,6 @@ import {
 	ValidationErrors, Validator, AsyncValidator, ValidatorFn, AsyncValidatorFn, AbstractControlOptions, FormHooks,
 	VALID, INVALID, PENDING, DISABLED
 } from './types';
-import { FormGroup } from './FormGroup';
-import { FormArray } from './FormArray';
 
 function _executeValidators(control: AbstractControl, validators: ValidatorFn[]): any[] {
 	return validators.map(v => v(control));
@@ -109,7 +107,7 @@ function isOptionsObj(validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractCo
  *
  * @publicApi
  */
-export abstract class AbstractControl {
+export abstract class AbstractControl<ParentType extends AbstractControl<ParentType> = any> {
 	/** @internal */
 	_pendingDirty!: boolean;
 
@@ -122,7 +120,7 @@ export abstract class AbstractControl {
 	/** @internal */
 	_updateOn!: FormHooks;
 
-	private _parent!: FormGroup|FormArray;
+	private _parent!: ParentType;
 	private _asyncValidationSubscription: any;
 
 	/**
@@ -162,7 +160,7 @@ export abstract class AbstractControl {
 	/**
 	 * The parent control.
 	 */
-	get parent(): FormGroup|FormArray { return this._parent; }
+	get parent(): ParentType { return this._parent; }
 
 	/**
 	 * The validation status of the control. There are four possible
@@ -556,7 +554,7 @@ export abstract class AbstractControl {
 	/**
 	 * @param parent Sets the parent of the control
 	 */
-	setParent(parent: FormGroup|FormArray): void { this._parent = parent; }
+	setParent(parent: ParentType): void { this._parent = parent; }
 
 	/**
 	 * Sets the value of the control. Abstract method (implemented in sub-classes).
@@ -692,18 +690,10 @@ export abstract class AbstractControl {
 		}
 		if (path instanceof Array && (path.length === 0)) return null;
 
-		return (<Array<string|number>>path).reduce((v: AbstractControl|null, name) => {
-			if (v instanceof FormGroup) {
-				return v.controls.hasOwnProperty(name as string) ? v.controls[name] : null;
-			}
-
-			if (v instanceof FormArray) {
-				return v.at(<number>name) || null;
-			}
-
-			return null;
-		}, this);
+		return (<Array<string|number>>path).reduce((v: AbstractControl|null, name) => (!!v ? v.getChild(name) : null), this);
 	}
+
+	protected abstract getChild(arg: string|number): AbstractControl|null;
 
 	/**
 	 * @description

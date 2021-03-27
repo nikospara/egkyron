@@ -1,5 +1,7 @@
 import { AbstractControl } from './AbstractControl';
 import { ValidatorFn, AsyncValidatorFn, AbstractControlOptions } from './types';
+import { FormGroup } from './FormGroup';
+import { FormArray } from './FormArray';
 
 /**
  * Tracks the value and validation status of an individual form control.
@@ -98,7 +100,7 @@ import { ValidatorFn, AsyncValidatorFn, AbstractControlOptions } from './types';
  *
  * @publicApi
  */
-export class FormControl extends AbstractControl {
+export class FormControl extends AbstractControl<FormArray|FormGroup> {
 	/** @internal */
 	_onChange: Function[] = [];
 
@@ -211,6 +213,10 @@ export class FormControl extends AbstractControl {
 		this.markAsUntouched(options);
 		this.setValue(this.value, options);
 		this._pendingChange = false;
+	}
+
+	protected getChild(arg: string|number): AbstractControl|null {
+		return null;
 	}
 
 	/**

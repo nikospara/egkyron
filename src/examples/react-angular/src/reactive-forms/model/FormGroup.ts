@@ -1,6 +1,7 @@
 import { AbstractControl } from './AbstractControl';
 import { FormControl } from './FormControl';
 import { ValidatorFn, AsyncValidatorFn, AbstractControlOptions } from './types';
+import { FormArray } from './FormArray';
 
 /**
  * Tracks the value and validity state of a group of `FormControl` instances.
@@ -74,7 +75,7 @@ import { ValidatorFn, AsyncValidatorFn, AbstractControlOptions } from './types';
  *
  * @publicApi
  */
-export class FormGroup extends AbstractControl {
+export class FormGroup extends AbstractControl<FormArray|FormGroup> {
 	/**
 	* Creates a new `FormGroup` instance.
 	*
@@ -337,6 +338,10 @@ export class FormGroup extends AbstractControl {
 					acc[name] = control instanceof FormControl ? control.value : (<any>control).getRawValue();
 					return acc;
 				});
+	}
+
+	protected getChild(arg: string|number): AbstractControl|null {
+		return this.controls.hasOwnProperty(arg as string) ? this.controls[arg] : null;
 	}
 
 	/** @internal */
