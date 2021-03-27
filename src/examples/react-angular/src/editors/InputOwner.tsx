@@ -1,23 +1,30 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Owner from 'model/Owner';
 import Pet from 'model/Pet';
 import InputText from 'controls/InputText';
 import InputAddress from './InputAddress';
 import InputArray from './InputArray';
 import InputPet from './InputPet';
-import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
 
-export default class InputOwner extends Component {
+export interface InputOwnerProps extends EditorComponentProps<Owner> {
+	label?: string;
+}
 
-	_handlers = {
+interface InputOwnerState {
+	value: Owner;
+}
+
+export default class InputOwner extends Component<InputOwnerProps,InputOwnerState> {
+
+	private _handlers: { [key:string]: any } = {
 		addPet: null
 	};
 
-	constructor(props) {
+	constructor(props: InputOwnerProps) {
 		super(props);
 		this.state = {
 			value: props.value || new Owner()
@@ -25,7 +32,7 @@ export default class InputOwner extends Component {
 		this._handlers.addPet = this.addPet.bind(this);
 	}
 
-	handleChange(field, value) {
+	handleChange(field: keyof Owner, value: any) {
 		var newValue = new Owner(this.state.value);
 		newValue[field] = value;
 		this.setState({
@@ -38,7 +45,7 @@ export default class InputOwner extends Component {
 		return new Pet({id: uuid.v4()});
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps: InputOwnerProps, nextState: InputOwnerState) {
 		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
@@ -67,10 +74,3 @@ export default class InputOwner extends Component {
 		);
 	}
 }
-
-InputOwner.propTypes = {
-	value: PropTypes.instanceOf(Owner),
-	onChange: PropTypes.func,
-	label: PropTypes.string,
-	validity: PropTypes.object
-};

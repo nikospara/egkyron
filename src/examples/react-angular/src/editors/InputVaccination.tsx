@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Vaccination from 'model/Vaccination';
 import InputText from 'controls/InputText';
-import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
-export default class InputVaccination extends Component {
-	constructor(props) {
+export interface InputVaccinationProps extends EditorComponentProps<Vaccination> {
+	label: string;
+}
+
+interface InputVaccinationState {
+	value: Vaccination;
+}
+
+export default class InputVaccination extends Component<InputVaccinationProps,InputVaccinationState> {
+	constructor(props: InputVaccinationProps) {
 		super(props);
 		this.state = {
 			value: props.value || new Vaccination()
 		};
 	}
 
-	handleChange(field, value) {
+	handleChange(field: keyof Vaccination, value: Vaccination[typeof field]) {
 		var newValue = new Vaccination(this.state.value);
 		newValue[field] = value;
 		this.setState({
@@ -23,7 +30,7 @@ export default class InputVaccination extends Component {
 		this.props.onChange && this.props.onChange(newValue);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps: InputVaccinationProps, nextState: InputVaccinationState) {
 		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
@@ -41,10 +48,3 @@ export default class InputVaccination extends Component {
 		);
 	}
 }
-
-InputVaccination.propTypes = {
-	value: PropTypes.instanceOf(Vaccination),
-	onChange: PropTypes.func,
-	label: PropTypes.string,
-	validity: PropTypes.object
-};

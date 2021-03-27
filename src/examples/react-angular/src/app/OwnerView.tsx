@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Validator from 'egkyron/Validator';
+import ValidationResultNode from 'egkyron/ValidationResultNode';
 import ConstructorIntrospector from 'egkyron/introspection-strategy/ConstructorIntrospector';
 import Owner from 'model/Owner';
 import makeValidatorRegistry from 'model/makeValidatorRegistry';
@@ -13,21 +14,27 @@ const BUTTON_SPAN = Object.freeze({
 	offset: 4
 });
 
-export default class OwnerView extends Component {
+interface OwnerViewState {
+	value: Owner;
+	validator: Validator;
+	validity: ValidationResultNode<any>
+}
 
-	_handlers = {
+export default class OwnerView extends Component<{}, OwnerViewState> {
+
+	private _handlers: { [key:string]: any } = {
 		onModelChange: null,
 		submitOwner: null
 	};
 
-	constructor(props) {
+	constructor(props: {}) {
 		super(props);
 		this.state = this._makeState();
 		this._handlers.onModelChange = this.onModelChange.bind(this);
 		this._handlers.submitOwner = this.submitOwner.bind(this);
 	}
 
-	_makeState() {
+	_makeState(): OwnerViewState {
 		var validator, value;
 		// create an Egkyron Validator
 		validator = new Validator(makeValidatorRegistry(), new ConstructorIntrospector());
@@ -41,7 +48,7 @@ export default class OwnerView extends Component {
 		};
 	}
 
-	onModelChange(value) {
+	onModelChange(value: Owner) {
 console.log('new model: ', value);
 		this.setState({
 			value,
@@ -60,7 +67,7 @@ console.log('VALUE:', this.state.value);
 		return (
 			<section className="owner-view">
 				<h2>Owner</h2>
-				<form autoComplete="off" noValidate="novalidate">
+				<form autoComplete="off" noValidate={true}>
 					<InputOwner value={this.state.value} onChange={this._handlers.onModelChange} validity={this.state.validity} />
 				</form>
 				<Row>

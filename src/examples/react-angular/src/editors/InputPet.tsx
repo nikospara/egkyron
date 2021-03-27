@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Pet from 'model/Pet';
 import Vaccination from 'model/Vaccination';
 import InputText from 'controls/InputText';
 import InputGender from './InputGender';
 import InputArray from './InputArray';
 import InputVaccination from './InputVaccination';
-import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
@@ -16,13 +15,21 @@ const GENDER_OPTIONS = [
 	{ id: 'F', label: 'Female' }
 ];
 
-export default class InputPet extends Component {
+export interface InputPetProps extends EditorComponentProps<Pet> {
+	label: string;
+}
 
-	_handlers = {
+interface InputPetState {
+	value: Pet;
+}
+
+export default class InputPet extends Component<InputPetProps,InputPetState> {
+
+	private _handlers: { [key:string]: any } = {
 		addVaccination: null
 	};
 
-	constructor(props) {
+	constructor(props: InputPetProps) {
 		super(props);
 		this.state = {
 			value: props.value || new Pet()
@@ -30,7 +37,7 @@ export default class InputPet extends Component {
 		this._handlers.addVaccination = this.addVaccination.bind(this);
 	}
 
-	handleChange(field, value) {
+	handleChange(field: keyof Pet, value: any) {
 		var newValue = new Pet(this.state.value);
 		newValue[field] = value;
 		this.setState({
@@ -43,7 +50,7 @@ export default class InputPet extends Component {
 		return new Vaccination({id: uuid.v4()});
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps: InputPetProps, nextState: InputPetState) {
 		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
@@ -68,10 +75,3 @@ export default class InputPet extends Component {
 		);
 	}
 }
-
-InputPet.propTypes = {
-	value: PropTypes.instanceOf(Pet),
-	onChange: PropTypes.func,
-	label: PropTypes.string,
-	validity: PropTypes.object
-};

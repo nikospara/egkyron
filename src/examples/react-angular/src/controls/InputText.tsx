@@ -1,35 +1,42 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
-import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
+import { makeMessages, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
 
-export default class InputText extends Component {
+export interface InputTextProps extends EditorComponentProps<string> {
+	label: string;
+}
 
-	_handlers = {
+interface InputTextState {
+	value: string;
+}
+
+export default class InputText extends Component<InputTextProps, InputTextState> {
+
+	private _handlers: { [key:string]: any } = {
 		handleChange: null
 	};
 
-	constructor(props) {
+	constructor(props: InputTextProps) {
 		super(props);
 		this.state = this._makeState(props);
 		this._handlers.handleChange = this.handleChange.bind(this);
 	}
 
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps(nextProps: InputTextProps) {
 		this.setState(this._makeState(nextProps));
 	}
 
-	_makeState(props) {
+	private _makeState(props: InputTextProps): InputTextState {
 		return {
 			value: props.value || ''
 		};
 	}
 
-	handleChange(event) {
+	handleChange(event: any) {
 		this.props.onChange && this.props.onChange(event.target.value);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps: InputTextProps, nextState: InputTextState) {
 		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
@@ -48,10 +55,3 @@ export default class InputText extends Component {
 		);
 	}
 }
-
-InputText.propTypes = {
-	value: PropTypes.string,
-	onChange: PropTypes.func,
-	label: PropTypes.string,
-	validity: PropTypes.object
-};

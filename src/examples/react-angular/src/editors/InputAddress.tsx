@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Address from 'model/Address';
 import InputText from 'controls/InputText';
-import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
+import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
 
-export default class InputAddress extends Component {
-	constructor(props) {
+export interface InputAddressProps extends EditorComponentProps<Address> {
+	label: string;
+}
+
+interface InputAddressState {
+	value: Address;
+}
+
+export default class InputAddress extends Component<InputAddressProps,InputAddressState> {
+	constructor(props: InputAddressProps) {
 		super(props);
 		this.state = {
 			value: props.value || new Address()
 		};
 	}
 
-	handleChange(field, value) {
+	handleChange(field: keyof Address, value: Address[typeof field]) {
 		var newValue = new Address(this.state.value);
 		newValue[field] = value;
 		this.setState({
@@ -21,7 +28,7 @@ export default class InputAddress extends Component {
 		this.props.onChange && this.props.onChange(newValue);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps:InputAddressProps, nextState: InputAddressState) {
 		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
@@ -35,10 +42,3 @@ export default class InputAddress extends Component {
 		);
 	}
 }
-
-InputAddress.propTypes = {
-	value: PropTypes.instanceOf(Address),
-	onChange: PropTypes.func,
-	label: PropTypes.string,
-	validity: PropTypes.object
-};

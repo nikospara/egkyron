@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container'
 
-export default function App(props) {
+export default function App(props: {children?: any}) {
 	return (
 		<React.Fragment>
 			<Navbar variant="dark" bg="dark" fixed="top">

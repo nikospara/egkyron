@@ -1,41 +1,49 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
-import { makeMessages, simpleShouldComponentUpdate } from 'controls/utils';
+import { makeMessages, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
 
-export default class InputGender extends Component {
+export interface InputGenderProps extends EditorComponentProps<string> {
+	label: string;
+	options: Array<{ id: string, label: string }>;
+}
 
-	_handlers = {
+interface InputGenderState {
+	value: string;
+}
+
+export default class InputGender extends Component<InputGenderProps,InputGenderState> {
+
+	private _handlers: { [key:string]: any } = {
 		handleChange: null
 	};
 
-	constructor(props) {
+	constructor(props: InputGenderProps) {
 		super(props);
 		this.state = this._makeState(props);
 		this._handlers.handleChange = this.handleChange.bind(this);
 	}
 
-	_makeState(props) {
+	private _makeState(props: InputGenderProps): InputGenderState {
 		return {
 			value: props.value || ''
 		};
 	}
 
-	handleChange(event) {
+	handleChange(event: any) {
 		this.setState({
 			value: event.target.value || ''
 		});
 		this.props.onChange && this.props.onChange(event.target.value || null);
 	}
 
-	_makeOptions() {
+	private _makeOptions() {
 		return [
 			<option key=""></option>,
 			...this.props.options.map(o => <option value={o.id} key={o.id}>{o.label}</option>)
 		];
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps: InputGenderProps, nextState: InputGenderState) {
 		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
@@ -56,11 +64,3 @@ export default class InputGender extends Component {
 		);
 	}
 }
-
-InputGender.propTypes = {
-	options: PropTypes.array,
-	value: PropTypes.string,
-	onChange: PropTypes.func,
-	label: PropTypes.string,
-	validity: PropTypes.object
-};

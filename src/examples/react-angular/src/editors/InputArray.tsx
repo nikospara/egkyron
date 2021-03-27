@@ -1,15 +1,26 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { attachInput, simpleShouldComponentUpdate } from 'controls/utils';
+import React, { Component, ComponentClass } from 'react';
+import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
 import Button from 'react-bootstrap/Button';
 
-export default class InputArray extends Component {
+export interface InputArrayProps<V> extends EditorComponentProps<V[]> {
+	label: string;
+	add: () => V;
+	addLabel: string;
+	removeLabel: string;
+	innerComponent: ComponentClass<any,any>;
+}
 
-	_handlers = {
+interface InputArrayState<V> {
+	value: V[];
+}
+
+export default class InputArray<V extends { id: string | null }> extends Component<InputArrayProps<V>,InputArrayState<V>> {
+
+	private _handlers: { [key:string]: any } = {
 		add: null
 	};
 
-	constructor(props) {
+	constructor(props: InputArrayProps<V>) {
 		super(props);
 		this.state = {
 			value: props.value || []
@@ -17,13 +28,13 @@ export default class InputArray extends Component {
 		this._handlers.add = this.add.bind(this);
 	}
 
-	handleChange(field, value) {
+	handleChange(field: keyof V[], value: any) {
 		var newValue = this.state.value.slice(0);
 		newValue[field] = value;
 		this._handleNewValue(newValue);
 	}
 
-	_handleNewValue(newValue) {
+	private _handleNewValue(newValue: V[]) {
 		this.setState({
 			value: newValue
 		});
@@ -40,7 +51,7 @@ export default class InputArray extends Component {
 		}
 	}
 
-	removeItem(item) {
+	removeItem(item: V) {
 		var index = this.state.value.indexOf(item);
 		if( index >= 0 ) {
 			var newValue = [...this.state.value.slice(0, index), ...this.state.value.slice(index + 1)];
@@ -48,16 +59,16 @@ export default class InputArray extends Component {
 		}
 	}
 
-	_renderInnerComponent(item, index) {
+	private _renderInnerComponent(item: V, index: number) {
 		return (
-			<div className="input-array-row-wrapper" key={item.id}>
+			<div className="input-array-row-wrapper" key={item.id || ''}>
 				<this.props.innerComponent {...attachInput(this, index)} />
 				<Button variant="danger" size="sm" onClick={() => this.removeItem(item)}>{this.props.removeLabel || 'Remove'}</Button>
 			</div>
 		);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps: InputArrayProps<V>, nextState: InputArrayState<V>) {
 		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
@@ -65,19 +76,8 @@ export default class InputArray extends Component {
 		return (
 			<fieldset>
 				{this.props.label ? <legend>{this.props.label} <Button variant="link" onClick={this._handlers.add}>{this.props.addLabel || 'Add'}</Button></legend> : null}
-				{this.props.value.map(this._renderInnerComponent.bind(this))}
+				{this.props.value ? this.props.value.map(this._renderInnerComponent.bind(this)) : null}
 			</fieldset>
 		);
 	}
 }
-
-InputArray.propTypes = {
-	value: PropTypes.array,
-	onChange: PropTypes.func,
-	label: PropTypes.string,
-	add: PropTypes.func,
-	addLabel: PropTypes.any,
-	removeLabel: PropTypes.any,
-	innerComponent: PropTypes.func.isRequired,
-	validity: PropTypes.object
-};
