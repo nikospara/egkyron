@@ -12,14 +12,10 @@ interface InputTextState {
 
 export default class InputText extends Component<InputTextProps, InputTextState> {
 
-	private _handlers: { [key:string]: any } = {
-		handleChange: null
-	};
-
 	constructor(props: InputTextProps) {
 		super(props);
 		this.state = this._makeState(props);
-		this._handlers.handleChange = this.handleChange.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps: InputTextProps) {
@@ -47,7 +43,7 @@ export default class InputText extends Component<InputTextProps, InputTextState>
 		return (
 			<Form.Group>
 				<Form.Label>{this.props.label}</Form.Label>
-				<Form.Control as="input" type="text" value={this.state.value} onChange={this._handlers.handleChange} isInvalid={isInvalid} />
+				<Form.Control as="input" type="text" value={this.state.value} onChange={this.handleChange} isInvalid={isInvalid} />
 				<Form.Control.Feedback type="invalid">
 					{messages}
 				</Form.Control.Feedback>

@@ -38,7 +38,10 @@ export default class OwnerView extends Component<{}, OwnerViewState> {
 		var validator, value;
 		// create an Egkyron Validator
 		validator = new Validator(makeValidatorRegistry(), new ConstructorIntrospector());
-		value = new Owner({name: 'Nikos', address: {number: '19'}, pets: [{id: 'abc'}, {id: 'taratata', name: 'Irma'}]});
+		// use the following to test model initialization
+		// value = new Owner({name: 'Nikos', address: {number: '19'}, pets: [{id: 'abc', gender: 'M'}, {id: 'taratata', name: 'Irma'}]});
+		// use the following to start with an empty value
+		value = new Owner();
 		return {
 			value,
 			// keep the validator in our state...

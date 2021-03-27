@@ -71,11 +71,9 @@ export default class InputPet extends Component<InputPetProps,InputPetState> {
 					)}</Editor>
 				</Col>
 				<Col sm={2}>
-					{/*
 					<Editor control={this.state.formGrp.controls.gender}>{(state: EditorComponentProps<string>) => (
 						<InputGender label="Gender"       {...state} options={GENDER_OPTIONS} />
 					)}</Editor>
-					*/}
 				</Col>
 				<Col sm={12}>
 					<Editor control={this.state.formGrp.controls.vaccinations}>{(state: EditorComponentProps<Vaccination[]>) => (

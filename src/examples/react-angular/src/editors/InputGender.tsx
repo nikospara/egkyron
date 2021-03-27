@@ -13,14 +13,10 @@ interface InputGenderState {
 
 export default class InputGender extends Component<InputGenderProps,InputGenderState> {
 
-	private _handlers: { [key:string]: any } = {
-		handleChange: null
-	};
-
 	constructor(props: InputGenderProps) {
 		super(props);
 		this.state = this._makeState(props);
-		this._handlers.handleChange = this.handleChange.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
 
 	private _makeState(props: InputGenderProps): InputGenderState {
@@ -54,7 +50,7 @@ export default class InputGender extends Component<InputGenderProps,InputGenderS
 		return (
 			<Form.Group>
 				<Form.Label>{this.props.label}</Form.Label>
-				<Form.Control as="select" value={this.state.value} onChange={this._handlers.handleChange} isInvalid={isInvalid}>
+				<Form.Control as="select" value={this.state.value} onChange={this.handleChange} isInvalid={isInvalid}>
 					{this._makeOptions()}
 				</Form.Control>
 				<Form.Control.Feedback type="invalid">
