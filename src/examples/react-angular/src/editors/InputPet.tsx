@@ -5,10 +5,13 @@ import InputText from 'controls/InputText';
 import InputGender from './InputGender';
 import InputArray from './InputArray';
 import InputVaccination from './InputVaccination';
-import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
+import { EditorComponentProps } from 'controls/utils';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import uuid from 'uuid';
+import { FormControl } from 'reactive-forms/model/FormControl';
+import { Editor } from 'reactive-forms/adapter/Editor';
+import { FormGroup } from 'reactive-forms/model/FormGroup';
 
 const GENDER_OPTIONS = [
 	{ id: 'M', label: 'Male' },
@@ -21,6 +24,7 @@ export interface InputPetProps extends EditorComponentProps<Pet> {
 
 interface InputPetState {
 	value: Pet;
+	formGrp: FormGroup;
 }
 
 export default class InputPet extends Component<InputPetProps,InputPetState> {
@@ -32,26 +36,26 @@ export default class InputPet extends Component<InputPetProps,InputPetState> {
 	constructor(props: InputPetProps) {
 		super(props);
 		this.state = {
-			value: props.value || new Pet()
+			value: props.value || new Pet(),
+			formGrp: new FormGroup({
+				name: new FormControl(),
+				type: new FormControl(),
+				gender: new FormControl(),
+				vaccinations: new FormControl()
+			})
 		};
 		this._handlers.addVaccination = this.addVaccination.bind(this);
-	}
-
-	handleChange(field: keyof Pet, value: any) {
-		var newValue = new Pet(this.state.value);
-		newValue[field] = value;
-		this.setState({
-			value: newValue
+		this.state.formGrp.valueChanges.subscribe(value => {
+			var newValue = new Pet(Object.assign({}, this.state.value, value));
+			this.setState({
+				value: newValue
+			});
+			this.props.onChange && this.props.onChange(newValue);
 		});
-		this.props.onChange && this.props.onChange(newValue);
 	}
 
 	addVaccination() {
 		return new Vaccination({id: uuid.v4()});
-	}
-
-	shouldComponentUpdate(nextProps: InputPetProps, nextState: InputPetState) {
-		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {
@@ -59,17 +63,27 @@ export default class InputPet extends Component<InputPetProps,InputPetState> {
 			<Form.Row>
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
 				<Col sm={5}>
-					<InputText   label="Name"         {...attachInput(this, 'name')} />
+					<Editor control={this.state.formGrp.controls.name}>{(state: EditorComponentProps<string>) => (
+						<InputText   label="Name"         {...state} />
+					)}</Editor>
 				</Col>
 				<Col sm={5}>
-					<InputText   label="Type"         {...attachInput(this, 'type')} />
+					<Editor control={this.state.formGrp.controls.type}>{(state: EditorComponentProps<string>) => (
+						<InputText   label="Type"         {...state} />
+					)}</Editor>
 				</Col>
 				<Col sm={2}>
-					<InputGender label="Gender"       {...attachInput(this, 'gender')} options={GENDER_OPTIONS} />
+					{/*
+					<Editor control={this.state.formGrp.controls.gender}>{(state: EditorComponentProps<string>) => (
+						<InputGender label="Gender"       {...state} options={GENDER_OPTIONS} />
+					)}</Editor>
+					*/}
 				</Col>
 				<Col sm={12}>
-					<InputArray  label="Vaccinations" {...attachInput(this, 'vaccinations')} innerComponent={InputVaccination}
-						add={this._handlers.addVaccination} addLabel="Add vaccination" removeLabel="Remove vaccination" />
+					<Editor control={this.state.formGrp.controls.vaccinations}>{(state: EditorComponentProps<Vaccination[]>) => (
+						<InputArray  label="Vaccinations" {...state} innerComponent={InputVaccination}
+							add={this._handlers.addVaccination} addLabel="Add vaccination" removeLabel="Remove vaccination" />
+					)}</Editor>
 				</Col>
 			</Form.Row>
 		);

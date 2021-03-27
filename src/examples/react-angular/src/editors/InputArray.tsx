@@ -1,6 +1,9 @@
 import React, { Component, ComponentClass } from 'react';
-import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
+import { EditorComponentProps } from 'controls/utils';
 import Button from 'react-bootstrap/Button';
+import { FormControl } from 'reactive-forms/model/FormControl';
+import { Editor } from 'reactive-forms/adapter/Editor';
+import { FormArray } from 'reactive-forms/model/FormArray';
 
 export interface InputArrayProps<V> extends EditorComponentProps<V[]> {
 	label: string;
@@ -12,6 +15,7 @@ export interface InputArrayProps<V> extends EditorComponentProps<V[]> {
 
 interface InputArrayState<V> {
 	value: V[];
+	formArray: FormArray;
 }
 
 export default class InputArray<V extends { id: string | null }> extends Component<InputArrayProps<V>,InputArrayState<V>> {
@@ -23,22 +27,16 @@ export default class InputArray<V extends { id: string | null }> extends Compone
 	constructor(props: InputArrayProps<V>) {
 		super(props);
 		this.state = {
-			value: props.value || []
+			value: props.value || [],
+			formArray: new FormArray([]) // TODO map the value to controls!
 		};
 		this._handlers.add = this.add.bind(this);
-	}
-
-	handleChange(field: keyof V[], value: any) {
-		var newValue = this.state.value.slice(0);
-		newValue[field] = value;
-		this._handleNewValue(newValue);
-	}
-
-	private _handleNewValue(newValue: V[]) {
-		this.setState({
-			value: newValue
+		this.state.formArray.valueChanges.subscribe(value => {
+			this.setState({
+				value: value
+			});
+			this.props.onChange && this.props.onChange(value);
 		});
-		this.props.onChange && this.props.onChange(newValue);
 	}
 
 	add() {
@@ -47,7 +45,8 @@ export default class InputArray<V extends { id: string | null }> extends Compone
 			// we can place it wherever we want; just appending it for the time being (simplest case)
 			var newValue = this.state.value.slice(0);
 			newValue.push(addedItem);
-			this._handleNewValue(newValue);
+			this.state.formArray.insert(newValue.length - 1, new FormControl(addedItem));
+			this.state.formArray.setValue(newValue);
 		}
 	}
 
@@ -55,21 +54,23 @@ export default class InputArray<V extends { id: string | null }> extends Compone
 		var index = this.state.value.indexOf(item);
 		if( index >= 0 ) {
 			var newValue = [...this.state.value.slice(0, index), ...this.state.value.slice(index + 1)];
-			this._handleNewValue(newValue);
+			this.setState({
+				value: newValue
+			});
+			this.state.formArray.removeAt(index);
+			this.state.formArray.setValue(newValue);
 		}
 	}
 
 	private _renderInnerComponent(item: V, index: number) {
 		return (
 			<div className="input-array-row-wrapper" key={item.id || ''}>
-				<this.props.innerComponent {...attachInput(this, index)} />
+				<Editor control={this.state.formArray.at(index)}>{(state: EditorComponentProps<V>) => (
+					<this.props.innerComponent {...state} />
+				)}</Editor>
 				<Button variant="danger" size="sm" onClick={() => this.removeItem(item)}>{this.props.removeLabel || 'Remove'}</Button>
 			</div>
 		);
-	}
-
-	shouldComponentUpdate(nextProps: InputArrayProps<V>, nextState: InputArrayState<V>) {
-		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {

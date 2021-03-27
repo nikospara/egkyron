@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import Vaccination from 'model/Vaccination';
 import InputText from 'controls/InputText';
-import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
+import { EditorComponentProps } from 'controls/utils';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
+import { FormControl } from 'reactive-forms/model/FormControl';
+import { Editor } from 'reactive-forms/adapter/Editor';
+import { FormGroup } from 'reactive-forms/model/FormGroup';
 
 export interface InputVaccinationProps extends EditorComponentProps<Vaccination> {
 	label: string;
@@ -11,27 +14,26 @@ export interface InputVaccinationProps extends EditorComponentProps<Vaccination>
 
 interface InputVaccinationState {
 	value: Vaccination;
+	formGrp: FormGroup;
 }
 
 export default class InputVaccination extends Component<InputVaccinationProps,InputVaccinationState> {
 	constructor(props: InputVaccinationProps) {
 		super(props);
 		this.state = {
-			value: props.value || new Vaccination()
+			value: props.value || new Vaccination(),
+			formGrp: new FormGroup({
+				type: new FormControl(),
+				date: new FormControl(),
+			})
 		};
-	}
-
-	handleChange(field: keyof Vaccination, value: Vaccination[typeof field]) {
-		var newValue = new Vaccination(this.state.value);
-		newValue[field] = value;
-		this.setState({
-			value: newValue
+		this.state.formGrp.valueChanges.subscribe(value => {
+			var newValue = new Vaccination(Object.assign({}, this.state.value, value));
+			this.setState({
+				value: newValue
+			});
+			this.props.onChange && this.props.onChange(newValue);
 		});
-		this.props.onChange && this.props.onChange(newValue);
-	}
-
-	shouldComponentUpdate(nextProps: InputVaccinationProps, nextState: InputVaccinationState) {
-		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {
@@ -39,10 +41,14 @@ export default class InputVaccination extends Component<InputVaccinationProps,In
 			<Form.Row>
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
 				<Col sm={7}>
-					<InputText label="Type" {...attachInput(this, 'type')} />
+					<Editor control={this.state.formGrp.controls.type}>{(state: EditorComponentProps<string>) => (
+						<InputText label="Type" {...state} />
+					)}</Editor>
 				</Col>
 				<Col sm={5}>
-					<InputText label="Date" {...attachInput(this, 'date')} />
+					<Editor control={this.state.formGrp.controls.date}>{(state: EditorComponentProps<string>) => (
+						<InputText label="Date" {...state} />
+					)}</Editor>
 				</Col>
 			</Form.Row>
 		);

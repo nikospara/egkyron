@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import Address from 'model/Address';
 import InputText from 'controls/InputText';
-import { attachInput, simpleShouldComponentUpdate, EditorComponentProps } from 'controls/utils';
+import { EditorComponentProps } from 'controls/utils';
+import { FormControl } from 'reactive-forms/model/FormControl';
+import { Editor } from 'reactive-forms/adapter/Editor';
+import { FormGroup } from 'reactive-forms/model/FormGroup';
 
 export interface InputAddressProps extends EditorComponentProps<Address> {
 	label: string;
@@ -9,35 +12,38 @@ export interface InputAddressProps extends EditorComponentProps<Address> {
 
 interface InputAddressState {
 	value: Address;
+	formGrp: FormGroup;
 }
 
 export default class InputAddress extends Component<InputAddressProps,InputAddressState> {
 	constructor(props: InputAddressProps) {
 		super(props);
 		this.state = {
-			value: props.value || new Address()
+			value: props.value || new Address(),
+			formGrp: new FormGroup({
+				street: new FormControl(),
+				number: new FormControl(),
+			})
 		};
-	}
-
-	handleChange(field: keyof Address, value: Address[typeof field]) {
-		var newValue = new Address(this.state.value);
-		newValue[field] = value;
-		this.setState({
-			value: newValue
+		this.state.formGrp.valueChanges.subscribe(value => {
+			var newValue = new Address(Object.assign({}, this.state.value, value));
+			this.setState({
+				value: newValue
+			});
+			this.props.onChange && this.props.onChange(newValue);
 		});
-		this.props.onChange && this.props.onChange(newValue);
-	}
-
-	shouldComponentUpdate(nextProps:InputAddressProps, nextState: InputAddressState) {
-		return simpleShouldComponentUpdate.call(this, nextProps, nextState);
 	}
 
 	render() {
 		return (
 			<fieldset>
 				{this.props.label ? <legend>{this.props.label}</legend> : null}
-				<InputText label="Street" {...attachInput(this, 'street')} />
-				<InputText label="Number" {...attachInput(this, 'number')} />
+				<Editor control={this.state.formGrp.controls.street}>{(state: EditorComponentProps<string>) => (
+					<InputText label="Street" {...state} />
+				)}</Editor>
+				<Editor control={this.state.formGrp.controls.number}>{(state: EditorComponentProps<string>) => (
+					<InputText label="Number" {...state} />
+				)}</Editor>
 			</fieldset>
 		);
 	}
